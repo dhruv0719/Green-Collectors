@@ -50,3 +50,41 @@ Green Action        Carbon Footprint
 ~~~
 
 ---
+
+## Added later after the Business logic
+
+### Emission factors
+~~~
+id
+category
+subcategory
+unit
+factor_kgco2e
+source
+region
+year
+~~~
+
+### Activity Logs 
+
+~~~
+  id
+  user_id 
+  action_type 
+  category 
+  quantity 
+  unit
+  co2_offset_kg
+  points_earned 
+  location
+  timestamp
+~~~
+
+### Action points
+~~~
+  action_type                  
+  tree_planted                 
+  cleanup_participated         
+  low_carbon_transport_logged  
+  eco_purchase                 
+~~~
