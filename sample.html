@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Green Collectors — Complete App</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --forest:#0d2818;--deep:#081510;--moss:#1a3d28;--leaf:#2d6e45;
+  --mid:#3d8a57;--lime:#6fcf45;--bright:#9de86a;--cream:#f0ebe0;
+  --warm:#e8dfc8;--muted:#5a7a60;--dim:rgba(255,255,255,0.45);
+  --border:rgba(255,255,255,0.08);--danger:#e85c3a;--warn:#f0a830;
+  --sky:#4ab8e8;
+}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#06100a;
+  min-height:100vh;
+  padding:48px 32px 80px;
+  overflow-x:hidden;
+}
+
+/* ── PAGE TITLE ── */
+.page-title{text-align:center;margin-bottom:56px;}
+.page-title h1{font-family:'Fraunces',serif;font-size:40px;font-weight:900;color:var(--bright);letter-spacing:-.02em;margin-bottom:6px;}
+.page-title p{font-size:14px;color:rgba(255,255,255,0.35);}
+.page-title .count{display:inline-block;background:rgba(111,207,69,0.12);color:var(--lime);font-size:11px;font-weight:700;padding:4px 12px;border-radius:100px;margin-top:8px;letter-spacing:.06em;}
+
+/* ── DIVIDERS ── */
+.section-divider{display:flex;align-items:center;gap:16px;margin:56px 0 36px;}
+.section-divider span{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);white-space:nowrap;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:rgba(111,207,69,0.12);}
+
+/* ── LAYOUT ── */
+.row{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;max-width:1700px;margin:0 auto;}
+
+/* ── PHONE ── */
+.phone-wrap{display:flex;flex-direction:column;align-items:center;gap:11px;}
+.phone-label{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.phone-label .new{background:var(--lime);color:var(--forest);font-size:8px;font-weight:800;padding:1px 6px;border-radius:100px;margin-left:4px;vertical-align:middle;}
+.phone{
+  width:295px;height:615px;background:var(--deep);border-radius:44px;overflow:hidden;position:relative;
+  border:1px solid rgba(255,255,255,0.07);
+  box-shadow:0 0 0 5px #0a0a14,0 0 0 7px #14141e,0 30px 60px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,0.04);
+  flex-shrink:0;
+}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:86px;height:24px;background:#06100a;border-radius:0 0 15px 15px;z-index:99;}
+.sb{display:flex;justify-content:space-between;padding:7px 20px 0;font-size:9px;font-weight:600;color:rgba(255,255,255,0.45);position:relative;z-index:10;flex-shrink:0;}
+
+/* ── BOTTOM NAV ── */
+.bnav{position:absolute;bottom:0;left:0;right:0;background:rgba(8,21,16,0.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:7px 0 13px;z-index:20;}
+.bn{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:7px;font-weight:700;letter-spacing:.04em;color:var(--muted);}
+.bn.on{color:var(--lime);}
+.bn .bi{font-size:17px;}
+
+/* ═══════════════ SPLASH ═══════════════ */
+.splash{width:100%;height:100%;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(45,110,69,0.4) 0%,transparent 70%),var(--forest);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px;text-align:center;position:relative;overflow:hidden;}
+.splash-rings{position:absolute;inset:-20%;z-index:0;}
+.splash-ring{position:absolute;border-radius:50%;border:1px solid rgba(111,207,69,0.08);top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse 4s ease-in-out infinite;}
+.splash-ring:nth-child(1){width:190px;height:190px;}
+.splash-ring:nth-child(2){width:310px;height:310px;animation-delay:.8s;border-color:rgba(111,207,69,0.05);}
+.splash-ring:nth-child(3){width:430px;height:430px;animation-delay:1.6s;border-color:rgba(111,207,69,0.03);}
+@keyframes pulse{0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)}50%{opacity:.5;transform:translate(-50%,-50%) scale(1.05)}}
+.splash-logo{position:relative;z-index:1;width:76px;height:76px;border-radius:26px;background:linear-gradient(135deg,var(--leaf),var(--lime));display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:20px;box-shadow:0 0 40px rgba(111,207,69,0.3);}
+.splash h1{font-family:'Fraunces',serif;font-size:24px;color:white;font-weight:900;line-height:1.15;margin-bottom:8px;position:relative;z-index:1;}
+.splash h1 em{color:var(--bright);font-style:italic;}
+.splash p{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:36px;position:relative;z-index:1;line-height:1.65;}
+.splash-btn{position:relative;z-index:1;background:linear-gradient(135deg,var(--leaf),var(--lime));color:var(--forest);font-family:'DM Sans',sans-serif;font-weight:800;font-size:13px;padding:13px 32px;border-radius:100px;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(111,207,69,0.35);}
+.splash-skip{position:relative;z-index:1;font-size:10px;color:rgba(255,255,255,0.28);margin-top:12px;cursor:pointer;text-decoration:underline;}
+
+/* ═══════════════ ONBOARDING ═══════════════ */
+.ob{width:100%;height:100%;display:flex;flex-direction:column;padding:28px 20px 90px;position:relative;overflow:hidden;}
+.ob-bg{position:absolute;inset:0;z-index:0;}
+.ob-c{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;}
+.ob-dots{display:flex;gap:5px;margin-bottom:24px;}
+.ob-dot{width:18px;height:3px;border-radius:100px;background:rgba(255,255,255,0.1);}
+.ob-dot.on{background:var(--lime);width:28px;}
+.ob-ill{flex:1;display:flex;align-items:center;justify-content:center;font-size:72px;filter:drop-shadow(0 0 28px rgba(111,207,69,0.3));margin-bottom:4px;}
+.ob-tag{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);background:rgba(111,207,69,0.1);padding:3px 10px;border-radius:100px;display:inline-block;margin-bottom:8px;width:fit-content;}
+.ob h2{font-family:'Fraunces',serif;font-size:21px;color:white;font-weight:900;line-height:1.15;margin-bottom:8px;}
+.ob h2 em{color:var(--bright);font-style:italic;}
+.ob p{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.65;margin-bottom:18px;}
+.ob-stats{display:flex;gap:8px;margin-bottom:22px;}
+.obs{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:8px;text-align:center;}
+.obs .n{font-family:'Fraunces',serif;font-size:16px;color:var(--bright);font-weight:700;}
+.obs .l{font-size:8px;color:var(--muted);margin-top:1px;}
+.ob-cta{background:linear-gradient(135deg,var(--leaf),var(--lime));color:var(--forest);font-family:'DM Sans',sans-serif;font-weight:800;font-size:12px;padding:12px;border-radius:13px;border:none;cursor:pointer;width:100%;}
+.ob-skip{font-size:9px;color:rgba(255,255,255,0.22);text-align:center;margin-top:8px;cursor:pointer;}
+
+/* ═══════════════ AUTH ═══════════════ */
+.auth{width:100%;height:100%;background:var(--deep);display:flex;flex-direction:column;padding:28px 20px 24px;overflow:hidden;}
+.auth-logo{display:flex;align-items:center;gap:7px;margin-bottom:22px;}
+.al-icon{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--leaf),var(--lime));display:flex;align-items:center;justify-content:center;font-size:16px;}
+.auth-logo span{font-family:'Fraunces',serif;font-size:14px;color:var(--bright);font-weight:700;}
+.auth h2{font-family:'Fraunces',serif;font-size:20px;color:white;font-weight:900;margin-bottom:3px;}
+.auth .sub{font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:18px;}
+.social-btns{display:flex;gap:8px;margin-bottom:14px;}
+.soc-btn{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:9px;display:flex;align-items:center;justify-content:center;gap:5px;color:rgba(255,255,255,0.6);font-size:11px;font-weight:600;cursor:pointer;}
+.or-d{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.or-d::before,.or-d::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06);}
+.or-d span{font-size:9px;color:rgba(255,255,255,0.22);}
+.field{margin-bottom:10px;}
+.field label{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;}
+.field input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:9px 11px;color:white;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;}
+.field input::placeholder{color:rgba(255,255,255,0.18);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.terms{font-size:9px;color:rgba(255,255,255,0.25);text-align:center;margin-bottom:12px;line-height:1.5;}
+.terms span{color:var(--lime);}
+.auth-btn{width:100%;background:linear-gradient(135deg,var(--leaf),var(--lime));color:var(--forest);font-family:'DM Sans',sans-serif;font-weight:800;font-size:12px;padding:12px;border-radius:12px;border:none;cursor:pointer;margin-bottom:12px;}
+.auth-sw{font-size:10px;color:rgba(255,255,255,0.3);text-align:center;}
+.auth-sw span{color:var(--lime);font-weight:700;}
+
+/* ═══════════════ HOME ═══════════════ */
+.s-home{width:100%;height:100%;position:relative;overflow:hidden;background:var(--forest);}
+.home-bg{position:absolute;inset:0;background:radial-gradient(ellipse 90% 50% at 50% 0%,rgba(111,207,69,0.12) 0%,transparent 60%),radial-gradient(ellipse 60% 60% at 80% 90%,rgba(45,110,69,0.12) 0%,transparent 50%);}
+.home-c{position:relative;z-index:1;padding:28px 18px 88px;height:100%;overflow:hidden;}
+.home-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.home-logo{display:flex;align-items:center;gap:5px;}
+.home-logo .icon{font-size:20px;}
+.home-logo span{font-family:'Fraunces',serif;font-size:12px;color:var(--bright);font-weight:700;}
+.nb{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:13px;position:relative;}
+.nd{position:absolute;top:5px;right:6px;width:6px;height:6px;background:var(--lime);border-radius:50%;border:1.5px solid var(--forest);}
+.greet{font-size:11px;color:var(--muted);margin-bottom:3px;}
+.home-title{font-family:'Fraunces',serif;font-size:20px;color:white;font-weight:900;line-height:1.15;margin-bottom:12px;}
+.home-title em{color:var(--bright);font-style:italic;}
+.ring-row{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(111,207,69,0.1);border-radius:16px;padding:13px;margin-bottom:12px;}
+.ring-svg{width:58px;height:58px;flex-shrink:0;}
+.ring-info h4{font-size:12px;font-weight:700;color:white;margin-bottom:2px;}
+.ring-info p{font-size:9px;color:var(--muted);line-height:1.5;}
+.ring-info strong{color:var(--lime);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.gc{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:10px;}
+.gc .gv{font-family:'Fraunces',serif;font-size:18px;color:var(--bright);font-weight:700;}
+.gc .gl{font-size:8px;color:var(--muted);margin-top:1px;}
+.action-strip{display:flex;align-items:center;gap:9px;background:var(--lime);border-radius:13px;padding:10px 13px;}
+.action-strip .at{font-size:11px;font-weight:700;color:var(--forest);}
+.action-strip .as{font-size:8px;color:rgba(13,40,24,0.55);}
+.action-strip .arr{font-size:14px;color:var(--forest);margin-left:auto;opacity:.7;}
+
+/* ═══════════════ CO2 ═══════════════ */
+.s-co2{width:100%;height:100%;background:var(--deep);display:flex;flex-direction:column;overflow:hidden;}
+.shdr{padding:0 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.shdr h2{font-family:'Fraunces',serif;font-size:17px;color:white;}
+.sh-pill{font-size:8px;background:rgba(111,207,69,0.14);color:var(--lime);padding:3px 9px;border-radius:100px;font-weight:700;}
+.co2-g-box{margin:0 18px 12px;background:linear-gradient(135deg,rgba(232,92,58,0.07),rgba(13,40,24,0.6));border:1px solid rgba(232,92,58,0.16);border-radius:16px;padding:13px;text-align:center;flex-shrink:0;}
+.g-lbl{font-size:8px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px;}
+.g-svg{width:140px;height:76px;margin:0 auto 6px;display:block;}
+.co2-vs{font-size:9px;color:rgba(255,255,255,0.3);}
+.co2-vs span{color:var(--lime);font-weight:700;}
+.cats{padding:0 18px;flex-shrink:0;}
+.cat-ttl{font-size:8px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;}
+.cat{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.ci{font-size:14px;width:16px;}
+.cb{flex:1;}
+.cl{font-size:9px;color:rgba(255,255,255,0.5);margin-bottom:2px;display:flex;justify-content:space-between;}
+.cbar{height:4px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden;}
+.cfill{height:100%;border-radius:100px;}
+.c1{background:linear-gradient(90deg,#e85c3a,#f07030);}
+.c2{background:linear-gradient(90deg,#f0a830,#f0c830);}
+.c3{background:linear-gradient(90deg,#6fcf45,#9de86a);}
+.c4{background:linear-gradient(90deg,#4ab8e8,#6fcf45);}
+.c5{background:linear-gradient(90deg,#a06af0,#6fcf45);}
+.tip-bar{margin:8px 18px 0;background:rgba(111,207,69,0.06);border:1px solid rgba(111,207,69,0.12);border-radius:10px;padding:8px 10px;display:flex;gap:7px;align-items:flex-start;flex-shrink:0;}
+.tip-bar p{font-size:9px;color:rgba(255,255,255,0.5);line-height:1.5;}
+.tip-bar strong{color:var(--lime);}
+
+/* ═══════════════ LOG ACTION ═══════════════ */
+.s-log{width:100%;height:100%;background:var(--forest);display:flex;flex-direction:column;overflow:hidden;}
+.bk-hdr{display:flex;align-items:center;gap:8px;padding:0 18px 12px;flex-shrink:0;}
+.bk{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:12px;}
+.bk-hdr h2{font-family:'Fraunces',serif;font-size:16px;color:white;}
+.log-b{padding:0 18px;flex-shrink:0;}
+.log-lbl{font-size:8px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.chip{padding:5px 10px;border-radius:100px;font-size:10px;font-weight:600;border:1px solid rgba(255,255,255,0.09);color:rgba(255,255,255,0.4);}
+.chip.on{background:var(--lime);color:var(--forest);border-color:var(--lime);}
+.inp-row{display:flex;gap:6px;margin-bottom:8px;}
+.inp{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:9px;padding:9px 10px;color:white;font-family:'DM Sans',sans-serif;font-size:11px;outline:none;}
+.unit-tag{background:rgba(111,207,69,0.1);border:1px solid rgba(111,207,69,0.16);border-radius:9px;padding:9px 10px;color:var(--lime);font-size:10px;font-weight:700;white-space:nowrap;}
+.res-row{display:flex;align-items:center;gap:10px;margin:0 18px 12px;background:linear-gradient(135deg,var(--moss),var(--leaf));border-radius:14px;padding:12px;flex-shrink:0;}
+.res-ico{font-size:26px;}
+.res-info h4{font-family:'Fraunces',serif;font-size:16px;color:white;}
+.res-info p{font-size:8px;color:rgba(255,255,255,0.45);margin-top:1px;}
+.res-badge{margin-left:auto;background:rgba(255,255,255,0.1);border-radius:8px;padding:6px 8px;text-align:center;}
+.res-badge .rn{font-family:'Fraunces',serif;font-size:14px;color:var(--bright);}
+.res-badge .rl{font-size:7px;color:rgba(255,255,255,0.4);}
+.log-list{padding:0 18px;flex-shrink:0;}
+.li{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.li-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.lig{background:rgba(111,207,69,0.1);}
+.liw{background:rgba(240,168,48,0.1);}
+.li-info h5{font-size:11px;font-weight:600;color:white;}
+.li-info p{font-size:8px;color:var(--muted);}
+.li-val{margin-left:auto;font-family:'Fraunces',serif;font-size:11px;font-weight:700;}
+.lv-g{color:var(--lime);}
+.lv-r{color:var(--danger);}
+
+/* ═══════════════ WALL OF FAME ═══════════════ */
+.s-wall{width:100%;height:100%;background:var(--forest);display:flex;flex-direction:column;overflow:hidden;}
+.chal-card{margin:0 18px 10px;background:linear-gradient(135deg,rgba(111,207,69,0.1),rgba(45,110,69,0.16));border:1px solid rgba(111,207,69,0.16);border-radius:12px;padding:10px;display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.cc-ico{font-size:22px;}
+.cc-info h5{font-size:11px;font-weight:700;color:white;}
+.cc-info p{font-size:8px;color:var(--muted);margin-top:1px;}
+.cc-btn{background:var(--lime);color:var(--forest);font-size:9px;font-weight:800;padding:5px 9px;border-radius:8px;white-space:nowrap;}
+.lb-ttl{font-size:8px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:0 18px 8px;flex-shrink:0;}
+.lb-list{padding:0 18px;flex-shrink:0;}
+.lbi{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:10px;margin-bottom:5px;}
+.lb1{background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.1);}
+.lb2{background:rgba(192,192,192,0.04);border:1px solid rgba(192,192,192,0.08);}
+.lb3{background:rgba(205,127,50,0.04);border:1px solid rgba(205,127,50,0.08);}
+.lbr{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
+.lbme{background:rgba(111,207,69,0.04);border:1px solid rgba(111,207,69,0.18);}
+.lb-rank{font-family:'Fraunces',serif;font-size:14px;font-weight:700;width:18px;text-align:center;}
+.lb1 .lb-rank{color:#ffd700;}.lb2 .lb-rank{color:#c0c0c0;}.lb3 .lb-rank{color:#cd7f32;}
+.lbr .lb-rank,.lbme .lb-rank{color:var(--muted);font-size:11px;}
+.lbme .lb-rank{color:var(--lime);}
+.lb-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:12px;font-weight:700;color:white;flex-shrink:0;}
+.lb-inf{flex:1;}
+.lb-inf .lbn{font-size:11px;font-weight:700;color:white;}
+.lb-inf .lbl{font-size:8px;color:var(--muted);}
+.lb-sc .lbs{font-family:'Fraunces',serif;font-size:13px;font-weight:700;color:var(--lime);}
+.lb-sc .lbu{font-size:7px;color:var(--muted);}
+
+/* ═══════════════ PROFILE ═══════════════ */
+.s-prof{width:100%;height:100%;background:var(--deep);display:flex;flex-direction:column;overflow:hidden;}
+.prof-hero{padding:10px 18px 14px;background:linear-gradient(180deg,rgba(111,207,69,0.07) 0%,transparent 100%);display:flex;flex-direction:column;align-items:center;text-align:center;flex-shrink:0;}
+.p-av{width:56px;height:56px;border-radius:50%;background:var(--leaf);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:white;margin-bottom:7px;border:2.5px solid var(--lime);}
+.p-name{font-family:'Fraunces',serif;font-size:17px;color:white;font-weight:700;}
+.p-loc{font-size:10px;color:var(--muted);margin-top:1px;}
+.p-lvl{background:rgba(111,207,69,0.1);color:var(--lime);font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px;margin-top:5px;}
+.p-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0 18px 10px;flex-shrink:0;}
+.psc{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:9px;text-align:center;}
+.psc .n{font-family:'Fraunces',serif;font-size:17px;color:var(--bright);font-weight:700;}
+.psc .l{font-size:7px;color:var(--muted);margin-top:1px;}
+.co2-cmp{margin:0 18px 10px;flex-shrink:0;}
+.co2-cmp-ttl{font-size:8px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;}
+.co2-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:10px;}
+.co2-row{display:flex;justify-content:space-between;margin-bottom:8px;}
+.co2-item .cn{font-family:'Fraunces',serif;font-size:16px;font-weight:900;}
+.co2-item .cl{font-size:7px;color:var(--muted);margin-top:1px;}
+.you{color:var(--warn);}.tgt{color:var(--lime);}
+.co2-bw{background:rgba(255,255,255,0.05);border-radius:100px;height:5px;margin-bottom:4px;overflow:hidden;}
+.co2-bf{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--lime),var(--warn));width:65%;}
+.co2-bl{font-size:8px;color:var(--muted);text-align:center;}
+.co2-bl strong{color:var(--lime);}
+.bdg-sec{padding:0 18px;flex-shrink:0;}
+.bdg-row{display:flex;gap:6px;overflow:hidden;}
+.bdg{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;}
+.bdg-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.be{background:rgba(111,207,69,0.1);border:1px solid rgba(111,207,69,0.18);}
+.bl{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);opacity:.4;}
+.bdg span{font-size:7px;color:var(--muted);text-align:center;max-width:40px;}
+
+/* ═══════════════ CHATBOT ═══════════════ */
+.s-chat{width:100%;height:100%;background:var(--deep);display:flex;flex-direction:column;overflow:hidden;}
+.chat-hdr{flex-shrink:0;padding:7px 16px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;background:rgba(8,21,16,0.97);backdrop-filter:blur(16px);}
+.ch-bk{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,0.6);}
+.ch-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--leaf),var(--lime));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;position:relative;}
+.ch-av::after{content:'';position:absolute;bottom:1px;right:1px;width:8px;height:8px;background:var(--lime);border-radius:50%;border:1.5px solid var(--deep);}
+.ch-info{flex:1;}
+.ch-info h3{font-family:'Fraunces',serif;font-size:13px;font-weight:700;color:white;}
+.ch-info .sts{font-size:8px;color:var(--lime);margin-top:1px;}
+.msgs{flex:1;overflow-y:auto;padding:10px 12px 6px;display:flex;flex-direction:column;gap:9px;}
+.msgs::-webkit-scrollbar{display:none;}
+.msg{display:flex;align-items:flex-end;gap:5px;}
+.msg.bot{flex-direction:row;}.msg.user{flex-direction:row-reverse;}
+.m-av{width:22px;height:22px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--leaf),var(--lime));display:flex;align-items:center;justify-content:center;font-size:11px;}
+.bbl{max-width:82%;padding:8px 11px;border-radius:14px;font-size:10px;line-height:1.55;}
+.msg.bot .bbl{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:rgba(255,255,255,0.85);border-bottom-left-radius:3px;}
+.msg.user .bbl{background:linear-gradient(135deg,var(--leaf),#1e5535);color:white;border-bottom-right-radius:3px;}
+.bbl strong{color:var(--bright);}
+.rc{background:rgba(111,207,69,0.07);border:1px solid rgba(111,207,69,0.14);border-radius:9px;padding:8px 9px;margin-top:6px;display:flex;gap:7px;}
+.rc-ico{font-size:16px;flex-shrink:0;}
+.rc-body h5{font-size:9px;font-weight:700;color:var(--bright);margin-bottom:2px;}
+.rc-body p{font-size:8px;color:rgba(255,255,255,0.45);line-height:1.5;}
+.rtag{display:inline-block;font-size:8px;font-weight:700;background:rgba(111,207,69,0.1);color:var(--lime);padding:2px 6px;border-radius:100px;margin-top:3px;}
+.pills-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.pill{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:100px;padding:2px 7px;font-size:8px;color:rgba(255,255,255,0.55);}
+.pill.gp{background:rgba(111,207,69,0.08);border-color:rgba(111,207,69,0.16);color:var(--lime);}
+.dots-bbl{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:3px;padding:9px 12px;display:flex;gap:4px;align-items:center;}
+.dot{width:4px;height:4px;border-radius:50%;background:var(--muted);animation:bounce 1.3s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:.15s;}.dot:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+.qr-row{flex-shrink:0;padding:5px 12px;display:flex;gap:5px;overflow:hidden;}
+.qrc{flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid rgba(111,207,69,0.18);border-radius:100px;padding:4px 10px;font-size:9px;font-weight:500;color:var(--bright);white-space:nowrap;}
+.chat-inp-area{flex-shrink:0;padding:5px 10px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+.inp-wrap-c{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:20px;display:flex;align-items:center;padding:0 10px;}
+.inp-wrap-c input{flex:1;background:transparent;border:none;outline:none;color:white;font-family:'DM Sans',sans-serif;font-size:10px;padding:8px 0;}
+.inp-wrap-c input::placeholder{color:rgba(255,255,255,0.18);}
+.snd-btn{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--leaf),var(--lime));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;box-shadow:0 3px 10px rgba(111,207,69,0.28);}
+
+/* ═══════════════ MARKETPLACE ═══════════════ */
+.s-mkt{width:100%;height:100%;background:var(--deep);display:flex;flex-direction:column;overflow:hidden;}
+.mkt-hero{flex-shrink:0;padding:0 18px 12px;background:linear-gradient(180deg,rgba(111,207,69,0.08) 0%,transparent 100%);}
+.mkt-hero h2{font-family:'Fraunces',serif;font-size:18px;color:white;margin-bottom:2px;}
+.mkt-hero p{font-size:10px;color:var(--muted);}
+/* search bar */
+.search-bar{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:8px 11px;margin:10px 18px 0;flex-shrink:0;}
+.search-bar input{flex:1;background:transparent;border:none;outline:none;color:white;font-family:'DM Sans',sans-serif;font-size:11px;}
+.search-bar input::placeholder{color:rgba(255,255,255,0.22);}
+.search-bar .si{font-size:14px;opacity:.4;}
+/* filter chips row */
+.filter-row{display:flex;gap:6px;padding:9px 18px 0;overflow:hidden;flex-shrink:0;}
+.fc{flex-shrink:0;padding:4px 11px;border-radius:100px;font-size:9px;font-weight:700;border:1px solid rgba(255,255,255,0.09);color:rgba(255,255,255,0.4);}
+.fc.on{background:var(--lime);color:var(--forest);border-color:var(--lime);}
+/* featured banner */
+.feat-banner{margin:10px 18px 0;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,var(--moss),var(--leaf));padding:14px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.feat-banner .fb-text h4{font-family:'Fraunces',serif;font-size:14px;color:white;margin-bottom:2px;}
+.feat-banner .fb-text p{font-size:9px;color:rgba(255,255,255,0.6);}
+.feat-banner .fb-tag{background:var(--lime);color:var(--forest);font-size:8px;font-weight:800;padding:3px 8px;border-radius:100px;margin-top:6px;display:inline-block;}
+.feat-banner .fb-ico{font-size:42px;margin-left:auto;flex-shrink:0;}
+/* product grid */
+.mkt-sec-ttl{font-size:8px;color:var(--muted);font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px 18px 6px;flex-shrink:0;}
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px;flex-shrink:0;}
+.prod-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden;}
+.prod-img{height:72px;display:flex;align-items:center;justify-content:center;font-size:36px;}
+.prod-body{padding:8px 9px 9px;}
+.prod-body .pn{font-size:11px;font-weight:700;color:white;margin-bottom:1px;line-height:1.3;}
+.prod-body .pb{font-size:8px;color:var(--muted);margin-bottom:5px;}
+.prod-body .pp{font-family:'Fraunces',serif;font-size:14px;color:var(--lime);font-weight:700;}
+.prod-body .pr{font-size:7px;color:var(--muted);margin-top:1px;}
+.eco-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(111,207,69,0.1);border:1px solid rgba(111,207,69,0.18);border-radius:6px;padding:2px 5px;font-size:7px;font-weight:700;color:var(--lime);margin-top:4px;}
+.add-btn{width:100%;background:rgba(111,207,69,0.12);border:1px solid rgba(111,207,69,0.2);border-radius:7px;color:var(--lime);font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;padding:5px;cursor:pointer;margin-top:5px;}
+
+/* ═══════════════ PRODUCT DETAIL ═══════════════ */
+.s-pdp{width:100%;height:100%;background:var(--deep);display:flex;flex-direction:column;overflow:hidden;}
+.pdp-img-area{flex-shrink:0;height:180px;background:linear-gradient(135deg,rgba(45,110,69,0.3),rgba(13,40,24,0.8));display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;}
+.pdp-back{position:absolute;top:12px;left:14px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;color:white;}
+.pdp-fav{position:absolute;top:12px;right:14px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.pdp-share{position:absolute;top:12px;right:48px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,0.7);}
+.pdp-body{flex:1;overflow:hidden;padding:14px 18px 0;}
+.pdp-brand{font-size:9px;color:var(--lime);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;}
+.pdp-name{font-family:'Fraunces',serif;font-size:18px;color:white;font-weight:900;line-height:1.2;margin-bottom:6px;}
+.pdp-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.pdp-price{font-family:'Fraunces',serif;font-size:22px;color:var(--lime);font-weight:900;}
+.pdp-orig{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:4px;}
+.stars{font-size:11px;color:var(--warn);margin-left:auto;}
+.eco-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.eco-tag{display:flex;align-items:center;gap:3px;background:rgba(111,207,69,0.08);border:1px solid rgba(111,207,69,0.16);border-radius:8px;padding:3px 8px;font-size:9px;font-weight:700;color:var(--lime);}
+.impact-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
+.ic{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center;}
+.ic .in{font-family:'Fraunces',serif;font-size:14px;color:var(--bright);font-weight:700;}
+.ic .il{font-size:7px;color:var(--muted);margin-top:1px;}
+.pdp-desc{font-size:10px;color:rgba(255,255,255,0.5);line-height:1.6;margin-bottom:10px;}
+.pdp-footer{flex-shrink:0;padding:10px 18px 20px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.pdp-cart{flex:1;background:linear-gradient(135deg,var(--leaf),var(--lime));color:var(--forest);font-family:'DM Sans',sans-serif;font-weight:800;font-size:12px;padding:12px;border-radius:12px;border:none;cursor:pointer;}
+.pdp-wish{width:44px;height:44px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+
+/* ═══════════════ PROPOSE PRODUCT ═══════════════ */
+.s-prop{width:100%;height:100%;background:var(--forest);display:flex;flex-direction:column;overflow:hidden;}
+.prop-body{flex:1;padding:0 18px;overflow:hidden;}
+.prop-info{background:rgba(111,207,69,0.07);border:1px solid rgba(111,207,69,0.14);border-radius:12px;padding:10px 11px;display:flex;gap:8px;align-items:flex-start;margin-bottom:12px;}
+.prop-info .pi{font-size:16px;flex-shrink:0;}
+.prop-info p{font-size:9px;color:rgba(255,255,255,0.55);line-height:1.55;}
+.prop-info strong{color:var(--lime);}
+.field-sm{margin-bottom:9px;}
+.field-sm label{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;}
+.field-sm input,.field-sm select,.field-sm textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:9px;padding:8px 10px;color:white;font-family:'DM Sans',sans-serif;font-size:11px;outline:none;}
+.field-sm input::placeholder,.field-sm textarea::placeholder{color:rgba(255,255,255,0.18);}
+.field-sm select option{background:var(--forest);}
+.field-sm textarea{resize:none;height:50px;line-height:1.5;}
+.field-row-sm{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+/* eco score selector */
+.eco-score-row{display:flex;gap:6px;margin-bottom:9px;}
+.esc{flex:1;border:1px solid rgba(255,255,255,0.09);border-radius:9px;padding:7px 4px;text-align:center;cursor:pointer;}
+.esc .es-ico{font-size:16px;margin-bottom:2px;}
+.esc .es-lbl{font-size:7px;color:rgba(255,255,255,0.4);font-weight:600;}
+.esc.on{border-color:var(--lime);background:rgba(111,207,69,0.1);}
+.esc.on .es-lbl{color:var(--lime);}
+/* upload box */
+.upload-box{border:1.5px dashed rgba(111,207,69,0.25);border-radius:10px;padding:12px;text-align:center;margin-bottom:10px;cursor:pointer;}
+.upload-box .ub-ico{font-size:22px;margin-bottom:4px;}
+.upload-box p{font-size:9px;color:rgba(255,255,255,0.35);}
+.upload-box span{color:var(--lime);}
+.prop-submit{width:100%;background:linear-gradient(135deg,var(--leaf),var(--lime));color:var(--forest);font-family:'DM Sans',sans-serif;font-weight:800;font-size:12px;padding:12px;border-radius:12px;border:none;cursor:pointer;margin:0 18px;width:calc(100% - 36px);flex-shrink:0;}
+.prop-footer{padding:10px 18px 20px;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<div class="page-title">
+  <h1>🌿 The Green Collectors</h1>
+  <p>Complete Mobile App — All Screens</p>
+  <div class="count">✦ 15 SCREENS · MARKETPLACE INCLUDED</div>
+</div>
+
+<!-- ═══ ROW 1: ONBOARDING ═══ -->
+<div class="section-divider"><span>01 — Onboarding</span></div>
+<div class="row">
+
+  <!-- SPLASH -->
+  <div class="phone-wrap">
+    <div class="phone-label">01 · Splash</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="splash">
+        <div class="splash-rings"><div class="splash-ring"></div><div class="splash-ring"></div><div class="splash-ring"></div></div>
+        <div class="splash-logo">🌿</div>
+        <h1>The Green<br><em>Collectors</em></h1>
+        <p>A people-powered movement to heal the planet — one action at a time.</p>
+        <button class="splash-btn">Get Started →</button>
+        <div class="splash-skip">Already a collector? Sign in</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONBOARD 1 -->
+  <div class="phone-wrap">
+    <div class="phone-label">02 · Onboard I</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="ob" style="background:var(--forest)">
+        <div class="ob-bg" style="background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(111,207,69,0.12) 0%,transparent 65%)"></div>
+        <div class="ob-c">
+          <div class="sb" style="padding-top:0"><span>9:41</span><span>🔋</span></div>
+          <div class="ob-dots" style="margin-top:6px"><div class="ob-dot on"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+          <div class="ob-ill">🌍</div>
+          <div class="ob-tag">The Crisis is Real</div>
+          <h2 class="ob">Are we leaving a clean planet or <em>a broken one?</em></h2>
+          <p class="ob">1.3°C of global warming already recorded. 1 million species at risk. The window to act is closing fast.</p>
+          <div class="ob-stats">
+            <div class="obs"><div class="n">1.3°C</div><div class="l">Temp Rise</div></div>
+            <div class="obs"><div class="n">1M+</div><div class="l">Species at Risk</div></div>
+            <div class="obs"><div class="n">45%</div><div class="l">Cuts Needed</div></div>
+          </div>
+          <button class="ob-cta">Next →</button>
+          <div class="ob-skip">Skip intro</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONBOARD 2 -->
+  <div class="phone-wrap">
+    <div class="phone-label">03 · Onboard II</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="ob" style="background:var(--deep)">
+        <div class="ob-bg" style="background:radial-gradient(ellipse 70% 60% at 80% 20%,rgba(45,110,69,0.18) 0%,transparent 60%)"></div>
+        <div class="ob-c">
+          <div class="sb" style="padding-top:0"><span>9:41</span><span>🔋</span></div>
+          <div class="ob-dots" style="margin-top:6px"><div class="ob-dot"></div><div class="ob-dot on"></div><div class="ob-dot"></div></div>
+          <div class="ob-ill">🌱</div>
+          <div class="ob-tag">Collective Action</div>
+          <h2 class="ob">Small acts.<br><em>Massive impact.</em></h2>
+          <p class="ob">Plant trees, join clean-ups, shop sustainably — and track exactly how much CO₂ you're saving.</p>
+          <div class="ob-stats">
+            <div class="obs"><div class="n">10K+</div><div class="l">Collectors</div></div>
+            <div class="obs"><div class="n">1M+</div><div class="l">Trees Planted</div></div>
+            <div class="obs"><div class="n">50+</div><div class="l">Cities</div></div>
+          </div>
+          <button class="ob-cta">Next →</button>
+          <div class="ob-skip">Skip intro</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONBOARD 3 -->
+  <div class="phone-wrap">
+    <div class="phone-label">04 · Onboard III</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="ob" style="background:var(--forest)">
+        <div class="ob-bg" style="background:radial-gradient(ellipse 80% 60% at 30% 80%,rgba(111,207,69,0.09) 0%,transparent 60%)"></div>
+        <div class="ob-c">
+          <div class="sb" style="padding-top:0"><span>9:41</span><span>🔋</span></div>
+          <div class="ob-dots" style="margin-top:6px"><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot on"></div></div>
+          <div class="ob-ill">🛍️</div>
+          <div class="ob-tag">Eco Marketplace</div>
+          <h2 class="ob">Shop green.<br><em>Live greener.</em></h2>
+          <p class="ob">Discover and propose sustainable products. Every purchase plants a tree and earns you green points.</p>
+          <div class="ob-stats">
+            <div class="obs"><div class="n">AI</div><div class="l">Advisor</div></div>
+            <div class="obs"><div class="n">Shop</div><div class="l">Eco Products</div></div>
+            <div class="obs"><div class="n">🏆</div><div class="l">Wall of Fame</div></div>
+          </div>
+          <button class="ob-cta" style="background:linear-gradient(135deg,#1e5535,var(--lime))">Join the Movement 🌿</button>
+          <div class="ob-skip">Already a collector? Sign in</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ ROW 2: AUTH ═══ -->
+<div class="section-divider"><span>02 — Authentication</span></div>
+<div class="row">
+
+  <!-- SIGN UP -->
+  <div class="phone-wrap">
+    <div class="phone-label">05 · Sign Up</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="auth">
+        <div class="sb"><span>9:41</span><span>🔋</span></div>
+        <div class="auth-logo" style="margin-top:8px"><div class="al-icon">🌿</div><span>The Green Collectors</span></div>
+        <h2>Create Account</h2>
+        <div class="sub">Join 10,000+ collectors protecting the planet</div>
+        <div class="social-btns"><div class="soc-btn">🌐 Google</div><div class="soc-btn">🍎 Apple</div></div>
+        <div class="or-d"><span>or sign up with email</span></div>
+        <div class="field-row">
+          <div class="field"><label>First Name</label><input placeholder="Aarav"></div>
+          <div class="field"><label>Last Name</label><input placeholder="Singh"></div>
+        </div>
+        <div class="field"><label>Email</label><input placeholder="you@email.com" type="email"></div>
+        <div class="field"><label>Password</label><input placeholder="Create password" type="password"></div>
+        <div class="field"><label>City / Country</label><input placeholder="Mumbai, India"></div>
+        <div class="terms">By signing up you agree to our <span>Terms</span> &amp; <span>Privacy Policy</span></div>
+        <button class="auth-btn">Create My Green Account 🌿</button>
+        <div class="auth-sw">Already a collector? <span>Sign in →</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="phone-wrap">
+    <div class="phone-label">06 · Login</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="auth" style="justify-content:flex-start;">
+        <div class="sb"><span>9:41</span><span>🔋</span></div>
+        <div style="padding:14px 0 16px;background:linear-gradient(180deg,rgba(111,207,69,0.07) 0%,transparent 100%);text-align:center;margin:6px -20px 0;padding-left:20px;padding-right:20px;">
+          <div style="font-size:38px;margin-bottom:6px;">🌿</div>
+          <h2>Welcome Back</h2>
+          <div class="sub" style="margin-bottom:0">Your planet missed you 🌍</div>
+        </div>
+        <div style="margin-top:16px;">
+          <div class="social-btns"><div class="soc-btn">🌐 Google</div><div class="soc-btn">🍎 Apple</div></div>
+          <div class="or-d"><span>or continue with email</span></div>
+          <div class="field" style="margin-bottom:8px"><label>Email</label><input placeholder="you@email.com" type="email"></div>
+          <div class="field" style="margin-bottom:5px"><label>Password</label><input placeholder="Your password" type="password"></div>
+          <div style="font-size:9px;color:var(--lime);text-align:right;margin-bottom:12px;cursor:pointer;">Forgot password?</div>
+          <button class="auth-btn">Sign In →</button>
+          <div style="background:rgba(111,207,69,0.06);border:1px solid rgba(111,207,69,0.12);border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+            <div style="font-size:9px;color:var(--lime);font-weight:700;margin-bottom:3px;">🌿 YOUR IMPACT SO FAR</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.45);line-height:1.6;">24 trees · 142kg CO₂ offset · Rank #47</div>
+          </div>
+          <div class="auth-sw">New to TGC? <span>Create account →</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ ROW 3: MAIN APP ═══ -->
+<div class="section-divider"><span>03 — Main App</span></div>
+<div class="row">
+
+  <!-- HOME -->
+  <div class="phone-wrap">
+    <div class="phone-label">07 · Home</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="s-home">
+        <div class="home-bg"></div>
+        <div class="home-c">
+          <div class="sb"><span>9:41</span><span>🔋</span></div>
+          <div class="home-hdr" style="margin-top:5px">
+            <div class="home-logo"><span class="icon">🌿</span><span>The Green Collectors</span></div>
+            <div class="nb">🔔<div class="nd"></div></div>
+          </div>
+          <div class="greet">Good morning, Aarav 👋</div>
+          <div class="home-title">Your planet<br>needs you <em>today.</em></div>
+          <div class="ring-row">
+            <svg class="ring-svg" viewBox="0 0 58 58">
+              <circle cx="29" cy="29" r="23" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5.5"/>
+              <circle cx="29" cy="29" r="23" fill="none" stroke="url(#rg)" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="144.5" stroke-dashoffset="46" transform="rotate(-90 29 29)"/>
+              <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6fcf45"/><stop offset="100%" stop-color="#9de86a"/></linearGradient></defs>
+              <text x="29" y="33" text-anchor="middle" font-family="Fraunces,serif" font-size="11" fill="#9de86a" font-weight="900">68%</text>
+            </svg>
+            <div class="ring-info"><h4>Weekly Green Score</h4><p>You offset <strong>12kg CO₂</strong> this week. 4kg from goal!</p></div>
+          </div>
+          <div class="grid2">
+            <div class="gc"><div class="gv">24</div><div class="gl">🌳 Trees Planted</div></div>
+            <div class="gc"><div class="gv">8</div><div class="gl">🧹 Clean-Ups</div></div>
+            <div class="gc"><div class="gv">142kg</div><div class="gl">🌍 CO₂ Saved</div></div>
+            <div class="gc"><div class="gv">#47</div><div class="gl">🏆 Global Rank</div></div>
+          </div>
+          <div class="action-strip">
+            <span style="font-size:16px">🌳</span>
+            <div><div class="at">Log Today's Green Action</div><div class="as">Trees, clean-ups, recycling & more</div></div>
+            <div class="arr">›</div>
+          </div>
+        </div>
+        <div class="bnav">
+          <div class="bn on"><div class="bi">🏠</div>HOME</div>
+          <div class="bn"><div class="bi">🌡️</div>CO₂</div>
+          <div class="bn"><div class="bi">🛍️</div>SHOP</div>
+          <div class="bn"><div class="bi">🏆</div>WALL</div>
+          <div class="bn"><div class="bi">👤</div>ME</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CO2 TRACKER -->
+  <div class="phone-wrap">
+    <div class="phone-label">08 · CO₂ Tracker</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="s-co2">
+        <div class="sb" style="padding:7px 20px 0;flex-shrink:0"><span>9:41</span><span>🔋</span></div>
+        <div class="shdr" style="margin-top:7px"><h2>CO₂ Footprint</h2><div class="sh-pill">Per Capita</div></div>
+        <div class="co2-g-box">
+          <div class="g-lbl">Your Annual Emission</div>
+          <svg class="g-svg" viewBox="0 0 140 76">
+            <path d="M 16 70 A 54 54 0 0 1 124 70" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 16 70 A 54 54 0 0 1 124 70" fill="none" stroke="url(#gg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="170" stroke-dashoffset="60"/>
+            <defs><linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6fcf45"/><stop offset="50%" stop-color="#f0a830"/><stop offset="100%" stop-color="#e85c3a"/></linearGradient></defs>
+            <text x="70" y="60" text-anchor="middle" font-family="Fraunces,serif" font-size="19" fill="#f0a830" font-weight="900">4.8</text>
+            <text x="70" y="70" text-anchor="middle" font-family="DM Sans" font-size="6.5" fill="rgba(255,255,255,0.3)">tonnes CO₂/yr</text>
+            <text x="12" y="76" font-family="DM Sans" font-size="6" fill="#6fcf45">LOW</text>
+            <text x="104" y="76" font-family="DM Sans" font-size="6" fill="#e85c3a">HIGH</text>
+          </svg>
+          <div class="co2-vs">India avg <span>1.9t</span> · World <span>4.7t</span> · Target <span>2.0t</span></div>
+        </div>
+        <div class="cats">
+          <div class="cat-ttl">Breakdown by Category</div>
+          <div class="cat"><div class="ci">🚗</div><div class="cb"><div class="cl"><span>Transport</span><span>1.8t</span></div><div class="cbar"><div class="cfill c1" style="width:75%"></div></div></div></div>
+          <div class="cat"><div class="ci">🍖</div><div class="cb"><div class="cl"><span>Food & Diet</span><span>1.2t</span></div><div class="cbar"><div class="cfill c2" style="width:50%"></div></div></div></div>
+          <div class="cat"><div class="ci">🏠</div><div class="cb"><div class="cl"><span>Home Energy</span><span>0.9t</span></div><div class="cbar"><div class="cfill c3" style="width:38%"></div></div></div></div>
+          <div class="cat"><div class="ci">🛍️</div><div class="cb"><div class="cl"><span>Shopping</span><span>0.6t</span></div><div class="cbar"><div class="cfill c4" style="width:25%"></div></div></div></div>
+          <div class="cat"><div class="ci">✈️</div><div class="cb"><div class="cl"><span>Flights</span><span>0.3t</span></div><div class="cbar"><div class="cfill c5" style="width:12%"></div></div></div></div>
+        </div>
+        <div class="tip-bar"><span style="font-size:14px;flex-shrink:0">💡</span><p><strong>Quick win:</strong> Public transport 3×/week saves ~<strong>0.4t CO₂/yr</strong></p></div>
+        <div class="bnav">
+          <div class="bn"><div class="bi">🏠</div>HOME</div>
+          <div class="bn on"><div class="bi">🌡️</div>CO₂</div>
+          <div class="bn"><div class="bi">🛍️</div>SHOP</div>
+          <div class="bn"><div class="bi">🏆</div>WALL</div>
+          <div class="bn"><div class="bi">👤</div>ME</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG ACTION -->
+  <div class="phone-wrap">
+    <div class="phone-label">09 · Log Action</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="s-log">
+        <div class="sb" style="padding:7px 20px 0;flex-shrink:0"><span>9:41</span><span>🔋</span></div>
+        <div class="bk-hdr" style="margin-top:7px"><div class="bk">‹</div><h2>Log Green Action</h2></div>
+        <div class="log-b">
+          <div class="log-lbl">Category</div>
+          <div class="chips"><div class="chip on">🌳 Trees</div><div class="chip">🧹 Clean-Up</div><div class="chip">♻️ Recycle</div><div class="chip">🚲 Transport</div></div>
+          <div class="log-lbl">Quantity</div>
+          <div class="inp-row"><input class="inp" value="10" type="number"><div class="unit-tag">trees</div></div>
+          <div class="log-lbl">Location</div>
+          <div class="inp-row"><input class="inp" value="Mumbai, India"></div>
+        </div>
+        <div class="res-row">
+          <div class="res-ico">🌱</div>
+          <div class="res-info"><h4>+10 Trees Planted</h4><p>CO₂ offset over 10 years</p></div>
+          <div class="res-badge"><div class="rn">−200kg</div><div class="rl">CO₂ offset</div></div>
+        </div>
+        <div class="log-list">
+          <div class="log-lbl">Recent Actions</div>
+          <div class="li"><div class="li-ico lig">🌳</div><div class="li-info"><h5>Tree Plantation Drive</h5><p>Today · Mumbai</p></div><div class="li-val lv-g">−20kg</div></div>
+          <div class="li"><div class="li-ico lig">🧹</div><div class="li-info"><h5>Beach Clean-Up</h5><p>Yesterday · Juhu</p></div><div class="li-val lv-g">+15pts</div></div>
+          <div class="li"><div class="li-ico liw">🚗</div><div class="li-info"><h5>Car Trip — 30km</h5><p>Mar 27</p></div><div class="li-val lv-r">+5.7kg</div></div>
+        </div>
+        <div class="bnav">
+          <div class="bn"><div class="bi">🏠</div>HOME</div>
+          <div class="bn"><div class="bi">🌡️</div>CO₂</div>
+          <div class="bn"><div class="bi">🛍️</div>SHOP</div>
+          <div class="bn"><div class="bi">🏆</div>WALL</div>
+          <div class="bn"><div class="bi">👤</div>ME</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ ROW 4: MARKETPLACE ═══ -->
+<div class="section-divider"><span>04 — Green Marketplace ✦ New</span></div>
+<div class="row">
+
+  <!-- MARKETPLACE HOME -->
+  <div class="phone-wrap">
+    <div class="phone-label">10 · Marketplace <span class="new">NEW</span></div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="s-mkt">
+        <div class="sb" style="padding:7px 20px 0;flex-shrink:0"><span>9:41</span><span>🔋</span></div>
+        <div class="mkt-hero" style="margin-top:7px">
+          <h2>🛍️ Green Market</h2>
+          <p>Sustainable products that plant trees &amp; earn points</p>
+        </div>
+        <div class="search-bar">
+          <span class="si">🔍</span>
+          <input placeholder="Search eco products…">
+        </div>
+        <div class="filter-row">
+          <div class="fc on">All</div>
+          <div class="fc">Bags</div>
+          <div class="fc">Home</div>
+          <div class="fc">Food</div>
+          <div class="fc">Personal</div>
+        </div>
+        <div class="feat-banner">
+          <div class="fb-text">
+            <h4>TGC Signature Bag</h4>
+            <p>Each bag plants 1 tree — tracked forever</p>
+            <span class="fb-tag">🌳 PLANT A TREE</span>
+          </div>
+          <div class="fb-ico">👜</div>
+        </div>
+        <div class="mkt-sec-ttl">Trending Eco Products</div>
+        <div class="prod-grid">
+          <div class="prod-card">
+            <div class="prod-img" style="background:linear-gradient(135deg,rgba(45,110,69,0.3),rgba(13,40,24,0.6))">🪴</div>
+            <div class="prod-body">
+              <div class="pn">Bamboo Planter Kit</div>
+              <div class="pb">EcoRoots · 4.8 ⭐</div>
+              <div class="pp">₹599</div>
+              <div class="eco-badge">🌿 100% Organic</div>
+              <button class="add-btn">+ Add to Cart</button>
+            </div>
+          </div>
+          <div class="prod-card">
+            <div class="prod-img" style="background:linear-gradient(135deg,rgba(74,184,232,0.2),rgba(13,40,24,0.6))">💧</div>
+            <div class="prod-body">
+              <div class="pn">Steel Water Bottle</div>
+              <div class="pb">GreenSip · 4.9 ⭐</div>
+              <div class="pp">₹849</div>
+              <div class="eco-badge">♻️ Zero Plastic</div>
+              <button class="add-btn">+ Add to Cart</button>
+            </div>
+          </div>
+          <div class="prod-card">
+            <div class="prod-img" style="background:linear-gradient(135deg,rgba(240,168,48,0.2),rgba(13,40,24,0.6))">☀️</div>
+            <div class="prod-body">
+              <div class="pn">Solar Phone Charger</div>
+              <div class="pb">SunCharge · 4.7 ⭐</div>
+              <div class="pp">₹2,199</div>
+              <div class="eco-badge">⚡ Renewable</div>
+              <button class="add-btn">+ Add to Cart</button>
+            </div>
+          </div>
+          <div class="prod-card">
+            <div class="prod-img" style="background:linear-gradient(135deg,rgba(160,106,240,0.2),rgba(13,40,24,0.6))">🧴</div>
+            <div class="prod-body">
+              <div class="pn">Refillable Soap Bar</div>
+              <div class="pb">NatureWash · 4.6 ⭐</div>
+              <div class="pp">₹299</div>
+              <div class="eco-badge">🌱 Biodegradable</div>
+              <button class="add-btn">+ Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="bnav">
+          <div class="bn"><div class="bi">🏠</div>HOME</div>
+          <div class="bn"><div class="bi">🌡️</div>CO₂</div>
+          <div class="bn on"><div class="bi">🛍️</div>SHOP</div>
+          <div class="bn"><div class="bi">🏆</div>WALL</div>
+          <div class="bn"><div class="bi">👤</div>ME</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL PAGE -->
+  <div class="phone-wrap">
+    <div class="phone-label">11 · Product Detail <span class="new">NEW</span></div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="s-pdp">
+        <div class="pdp-img-area">
+          <div style="font-size:80px">👜</div>
+          <div class="pdp-back">‹</div>
+          <div class="pdp-share">⬆</div>
+          <div class="pdp-fav">🤍</div>
+        </div>
+        <div class="pdp-body">
+          <div class="pdp-brand">TGC LABELS · OFFICIAL PRODUCT</div>
+          <div class="pdp-name">The Green Collectors Signature Tote Bag</div>
+          <div class="pdp-row">
+            <div class="pdp-price">₹1,299 <span class="pdp-orig">₹1,799</span></div>
+            <div class="stars">★★★★★ 4.9</div>
+          </div>
+          <div class="eco-row">
+            <div class="eco-tag">🌳 Plants 1 Tree</div>
+            <div class="eco-tag">♻️ Recycled Cotton</div>
+            <div class="eco-tag">🌿 Carbon Neutral</div>
+          </div>
+          <div class="impact-cards">
+            <div class="ic"><div class="in">1</div><div class="il">Tree Planted</div></div>
+            <div class="ic"><div class="in">2kg</div><div class="il">CO₂ Offset</div></div>
+            <div class="ic"><div class="in">+50</div><div class="il">Green Pts</div></div>
+          </div>
+          <div class="pdp-desc">Made from 100% recycled cotton, this bag replaces up to 500 single-use plastic bags. Every bag sold plants a tree you can track on the TGC app forever.</div>
+        </div>
+        <div class="pdp-footer">
+          <button class="pdp-cart">🛒 Add to Cart — ₹1,299</button>
+          <div class="pdp-wish">🤍</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROPOSE PRODUCT -->
+  <div class="phone-wrap">
+    <div class="phone-label">12 · Propose Product <span class="new">NEW</span></div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="s-prop">
+        <div class="sb" style="padding:7px 20px 0;flex-shrink:0"><span>9:41</span><span>🔋</span></div>
+        <div class="bk-hdr" style="margin-top:7px"><div class="bk">‹</div><h2>Propose a Product</h2></div>
+        <div class="prop-body">
+          <div class="prop-info">
+            <div class="pi">💡</div>
+            <p>Know a <strong>sustainable product</strong> the TGC community should know about? Propose it — our team reviews &amp; lists verified eco products.</p>
+          </div>
+          <!-- Product Name & Brand -->
+          <div class="field-row-sm">
+            <div class="field-sm"><label>Product Name</label><input placeholder="Bamboo Toothbrush"></div>
+            <div class="field-sm"><label>Brand</label><input placeholder="EcoBrush Co."></div>
+          </div>
+          <!-- Category -->
+          <div class="field-sm">
+            <label>Category</label>
+            <select><option>🌿 Select category…</option><option>Personal Care</option><option>Home & Kitchen</option><option>Food & Beverage</option><option>Clothing & Bags</option><option>Energy & Tech</option><option>Other</option></select>
+          </div>
+          <!-- Eco Score -->
+          <div class="log-lbl" style="margin-bottom:6px">Eco Impact Level</div>
+          <div class="eco-score-row">
+            <div class="esc"><div class="es-ico">🌱</div><div class="es-lbl">Low Impact</div></div>
+            <div class="esc on"><div class="es-ico">🌿</div><div class="es-lbl">Medium</div></div>
+            <div class="esc"><div class="es-ico">🌳</div><div class="es-lbl">High Impact</div></div>
+            <div class="esc"><div class="es-ico">🌍</div><div class="es-lbl">Planet Saver</div></div>
+          </div>
+          <!-- Price & Link -->
+          <div class="field-row-sm">
+            <div class="field-sm"><label>Est. Price (₹)</label><input placeholder="299" type="number"></div>
+            <div class="field-sm"><label>Product Link</label><input placeholder="https://…"></div>
+          </div>
+          <!-- Why eco -->
+          <div class="field-sm"><label>Why is it eco-friendly?</label><textarea placeholder="Describe the environmental benefits, certifications, materials…"></textarea></div>
+          <!-- Upload -->
+          <div class="upload-box">
+            <div class="ub-ico">📷</div>
+            <p><span>Upload a photo</span> of the product</p>
+          </div>
+        </div>
+        <div class="prop-footer">
+          <button class="prop-submit">Submit for Review 🌿</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ ROW 5: COMMUNITY + PROFILE + AI ═══ -->
+<div class="section-divider"><span>05 — Community, Profile & AI</span></div>
+<div class="row">
+
+  <!-- WALL OF FAME -->
+  <div class="phone-wrap">
+    <div class="phone-label">13 · Wall of Fame</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="s-wall">
+        <div class="sb" style="padding:7px 20px 0;flex-shrink:0"><span>9:41</span><span>🔋</span></div>
+        <div class="shdr" style="margin-top:7px;flex-shrink:0"><h2>Wall of Fame</h2><div class="sh-pill">Global 🌍</div></div>
+        <div class="chal-card">
+          <div class="cc-ico">⚡</div>
+          <div class="cc-info"><h5>April Challenge: 100 Trees</h5><p>2 days left · 67 collectors joined</p></div>
+          <div class="cc-btn">JOIN</div>
+        </div>
+        <div class="lb-ttl">Top Green Collectors</div>
+        <div class="lb-list">
+          <div class="lbi lb1"><div class="lb-rank">1</div><div class="lb-av" style="background:#2d7d46">S</div><div class="lb-inf"><div class="lbn">Shivan Aggarwal</div><div class="lbl">Mumbai 🇮🇳 · CGO</div></div><div class="lb-sc"><div class="lbs">4,820</div><div class="lbu">pts</div></div></div>
+          <div class="lbi lb2"><div class="lb-rank">2</div><div class="lb-av" style="background:#1a5c8c">J</div><div class="lb-inf"><div class="lbn">Jaksh Aggarwal</div><div class="lbl">Mumbai 🇮🇳</div></div><div class="lb-sc"><div class="lbs">3,910</div><div class="lbu">pts</div></div></div>
+          <div class="lbi lb3"><div class="lb-rank">3</div><div class="lb-av" style="background:#7c3c8c">M</div><div class="lb-inf"><div class="lbn">Maya Naidu</div><div class="lbl">Pune 🇮🇳</div></div><div class="lb-sc"><div class="lbs">2,740</div><div class="lbu">pts</div></div></div>
+          <div class="lbi lbr"><div class="lb-rank" style="font-size:11px">4</div><div class="lb-av" style="background:#3a6b2a">A</div><div class="lb-inf"><div class="lbn">Aarav Singh</div><div class="lbl">Dubai 🇦🇪</div></div><div class="lb-sc"><div class="lbs">2,210</div><div class="lbu">pts</div></div></div>
+          <div class="lbi lbr"><div class="lb-rank" style="font-size:11px">5</div><div class="lb-av" style="background:#6b4a2a">M</div><div class="lb-inf"><div class="lbn">Mayank</div><div class="lbl">Delhi 🇮🇳</div></div><div class="lb-sc"><div class="lbs">1,980</div><div class="lbu">pts</div></div></div>
+          <div class="lbi lbme"><div class="lb-rank" style="color:var(--lime);font-size:10px">#47</div><div class="lb-av" style="background:#2d5a3d">Y</div><div class="lb-inf"><div class="lbn" style="color:var(--lime)">You</div><div class="lbl">Mumbai 🇮🇳</div></div><div class="lb-sc"><div class="lbs">680</div><div class="lbu">pts</div></div></div>
+        </div>
+        <div class="bnav">
+          <div class="bn"><div class="bi">🏠</div>HOME</div>
+          <div class="bn"><div class="bi">🌡️</div>CO₂</div>
+          <div class="bn"><div class="bi">🛍️</div>SHOP</div>
+          <div class="bn on"><div class="bi">🏆</div>WALL</div>
+          <div class="bn"><div class="bi">👤</div>ME</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="phone-wrap">
+    <div class="phone-label">14 · My Profile</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="s-prof">
+        <div class="sb" style="padding:7px 20px 0;flex-shrink:0"><span>9:41</span><span>🔋</span></div>
+        <div class="prof-hero" style="margin-top:4px">
+          <div class="p-av">A</div>
+          <div class="p-name">Aarav Singh</div>
+          <div class="p-loc">📍 Mumbai, India</div>
+          <div class="p-lvl">🌿 Level 4 — Green Guardian</div>
+        </div>
+        <div class="p-stats">
+          <div class="psc"><div class="n">24</div><div class="l">🌳 Trees</div></div>
+          <div class="psc"><div class="n">8</div><div class="l">🧹 Clean-Ups</div></div>
+          <div class="psc"><div class="n">142</div><div class="l">kg CO₂</div></div>
+        </div>
+        <div class="co2-cmp">
+          <div class="co2-cmp-ttl">My CO₂ vs Benchmarks</div>
+          <div class="co2-box">
+            <div class="co2-row">
+              <div class="co2-item"><div class="cn you">4.8t</div><div class="cl">You</div></div>
+              <div class="co2-item"><div class="cn" style="color:rgba(255,255,255,0.25);font-size:13px">4.7t</div><div class="cl">World</div></div>
+              <div class="co2-item"><div class="cn" style="color:var(--muted);font-size:13px">1.9t</div><div class="cl">India</div></div>
+              <div class="co2-item"><div class="cn tgt">2.0t</div><div class="cl">2030 Goal</div></div>
+            </div>
+            <div class="co2-bw"><div class="co2-bf"></div></div>
+            <div class="co2-bl">Reduce <strong>2.8t more</strong> to hit 2030 Paris target 🎯</div>
+          </div>
+        </div>
+        <!-- Purchases row -->
+        <div class="co2-cmp-ttl" style="padding:0 18px;margin-bottom:7px">Green Purchases</div>
+        <div style="display:flex;gap:7px;padding:0 18px;flex-shrink:0;margin-bottom:12px;">
+          <div style="flex:1;background:rgba(111,207,69,0.06);border:1px solid rgba(111,207,69,0.12);border-radius:10px;padding:8px;text-align:center;">
+            <div style="font-family:'Fraunces',serif;font-size:18px;color:var(--bright);font-weight:700">3</div>
+            <div style="font-size:7px;color:var(--muted);margin-top:1px">Items Bought</div>
+          </div>
+          <div style="flex:1;background:rgba(111,207,69,0.06);border:1px solid rgba(111,207,69,0.12);border-radius:10px;padding:8px;text-align:center;">
+            <div style="font-family:'Fraunces',serif;font-size:18px;color:var(--bright);font-weight:700">3</div>
+            <div style="font-size:7px;color:var(--muted);margin-top:1px">Trees via Shop</div>
+          </div>
+          <div style="flex:1;background:rgba(111,207,69,0.06);border:1px solid rgba(111,207,69,0.12);border-radius:10px;padding:8px;text-align:center;">
+            <div style="font-family:'Fraunces',serif;font-size:18px;color:var(--bright);font-weight:700">150</div>
+            <div style="font-size:7px;color:var(--muted);margin-top:1px">Shop Points</div>
+          </div>
+        </div>
+        <div class="bdg-sec">
+          <div class="co2-cmp-ttl" style="margin-bottom:7px">Badges</div>
+          <div class="bdg-row">
+            <div class="bdg"><div class="bdg-ico be">🌱</div><span>First Tree</span></div>
+            <div class="bdg"><div class="bdg-ico be">🧹</div><span>Clean Freak</span></div>
+            <div class="bdg"><div class="bdg-ico be">🛍️</div><span>Eco Shopper</span></div>
+            <div class="bdg"><div class="bdg-ico be">🌳</div><span>Grove Maker</span></div>
+            <div class="bdg"><div class="bdg-ico bl">🌍</div><span>Earth Hero</span></div>
+          </div>
+        </div>
+        <div class="bnav">
+          <div class="bn"><div class="bi">🏠</div>HOME</div>
+          <div class="bn"><div class="bi">🌡️</div>CO₂</div>
+          <div class="bn"><div class="bi">🛍️</div>SHOP</div>
+          <div class="bn"><div class="bi">🏆</div>WALL</div>
+          <div class="bn on"><div class="bi">👤</div>ME</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI CHATBOT (LIVE) -->
+  <div class="phone-wrap">
+    <div class="phone-label">15 · Green Guide AI ✦ Live</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="s-chat">
+        <div class="sb" style="padding:7px 20px 0;flex-shrink:0"><span>9:41</span><span>🔋</span></div>
+        <div class="chat-hdr">
+          <div class="ch-bk">‹</div>
+          <div class="ch-av">🌿</div>
+          <div class="ch-info"><h3>Green Guide</h3><div class="sts">● AI Sustainability Advisor</div></div>
+          <span style="font-size:14px;opacity:.35;cursor:pointer">⋯</span>
+        </div>
+        <div class="msgs" id="msgs">
+          <div style="text-align:center;font-size:8px;color:var(--muted);font-weight:600;letter-spacing:.06em;">Today · Mar 29</div>
+          <div class="msg bot">
+            <div class="m-av">🌿</div>
+            <div class="bbl">
+              Hey Aarav! 👋 I'm <strong>Green Guide</strong> — your AI sustainability advisor.<br><br>I can help with <strong>CO₂ reduction</strong>, eco product picks, local actions, and greener habits. What's on your mind?
+              <div class="pills-row">
+                <span class="pill gp">🌍 CO₂ Tips</span>
+                <span class="pill gp">🛍️ Eco Products</span>
+                <span class="pill gp">🌳 Actions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="qr-row" id="qrRow">
+          <div class="qrc" onclick="sendQ(this)">🚗 Cut transport CO₂</div>
+          <div class="qrc" onclick="sendQ(this)">🛍️ Best eco products</div>
+          <div class="qrc" onclick="sendQ(this)">🌳 Plant trees</div>
+          <div class="qrc" onclick="sendQ(this)">🥗 Eco diet</div>
+        </div>
+        <div class="chat-inp-area">
+          <div class="inp-wrap-c">
+            <input id="ci" placeholder="Ask Green Guide…" autocomplete="off" onkeydown="if(event.key==='Enter')sendMsg()">
+          </div>
+          <button class="snd-btn" id="sb2" onclick="sendMsg()">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SYS = `You are Green Guide, the AI sustainability advisor for The Green Collectors — a youth-led environmental movement co-founded by Jaksh Aggarwal (age 9, CGO) and Shivan Aggarwal (age 13).
+Personality: warm, encouraging, science-backed, never preachy. Celebrate every small action.
+Focus on: reducing personal CO₂ (transport, food, energy, shopping, flights), TGC initiatives (reforestation, waste reduction, education, sustainable innovation), per-capita benchmarks (India 1.9t/yr, World 4.7t/yr, Paris 2030 target 2.0t/yr), and sustainable product recommendations from the TGC Green Marketplace.
+Rules: Be concise (mobile UI — keep responses under 120 words). Give specific numbers when possible. Suggest one action doable TODAY. End with a short motivating line or follow-up question. Use 1-2 relevant emojis. Reference TGC marketplace products naturally when relevant (TGC Tote Bag plants a tree, bamboo products, steel bottles, solar chargers, etc.).`;
+
+let history=[],busy=false;
+
+function addMsg(role,html){
+  const w=document.getElementById('msgs');
+  const d=document.createElement('div');
+  d.className='msg '+role;
+  if(role==='bot') d.innerHTML=`<div class="m-av">🌿</div><div class="bbl">${html}</div>`;
+  else d.innerHTML=`<div class="bbl">${html}</div>`;
+  w.appendChild(d);
+  w.scrollTop=w.scrollHeight;
+}
+
+function fmt(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+          .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+}
+
+function showTyping(){
+  const w=document.getElementById('msgs');
+  const d=document.createElement('div');
+  d.className='msg bot';d.id='typing';
+  d.innerHTML=`<div class="m-av">🌿</div><div class="dots-bbl"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  w.appendChild(d);w.scrollTop=w.scrollHeight;
+}
+
+function setLoading(v){
+  busy=v;
+  document.getElementById('sb2').disabled=v;
+  document.getElementById('ci').disabled=v;
+}
+
+function sendQ(el){document.getElementById('ci').value=el.textContent.trim();sendMsg();}
+
+async function sendMsg(){
+  if(busy)return;
+  const inp=document.getElementById('ci');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';
+  addMsg('user',fmt(text));
+  history.push({role:'user',content:text});
+  setLoading(true);showTyping();
+  updateQR(text);
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:history})
+    });
+    const data=await res.json();
+    const reply=data.content?.map(b=>b.text||'').join('')||'Sorry, try again 🌿';
+    document.getElementById('typing')?.remove();
+    history.push({role:'assistant',content:reply});
+    addMsg('bot',fmt(reply));
+  }catch(e){
+    document.getElementById('typing')?.remove();
+    addMsg('bot','🌿 Connection issue — please try again!');
+  }finally{setLoading(false);}
+}
+
+function updateQR(msg){
+  const m=msg.toLowerCase();
+  let chips;
+  if(m.includes('product')||m.includes('shop')||m.includes('buy')||m.includes('market'))
+    chips=['🛍️ TGC Tote Bag','🪴 Bamboo products','💧 Steel bottle','☀️ Solar gadgets'];
+  else if(m.includes('transport')||m.includes('car')||m.includes('driv'))
+    chips=['🚲 Cycling tips','🚌 Public transit','⚡ EVs','✈️ Flight offset'];
+  else if(m.includes('food')||m.includes('diet')||m.includes('eat'))
+    chips=['🥗 Plant-based swaps','🛒 Eco shopping','🍳 Zero-waste cooking','🌾 Local produce'];
+  else if(m.includes('home')||m.includes('energy'))
+    chips=['💡 Switch renewables','☀️ Solar','🚿 Save water','🌡️ Smart heating'];
+  else if(m.includes('tree')||m.includes('plant'))
+    chips=['🌳 Find events','🌱 Sapling care','🏙️ Urban gardening','🛍️ Buy TGC bag → plant tree'];
+  else
+    chips=['🌳 Plant trees','🛍️ Eco products','🚲 Green commute','♻️ Recycle better'];
+  document.getElementById('qrRow').innerHTML=chips.map(c=>`<div class="qrc" onclick="sendQ(this)">${c}</div>`).join('');
+}
+</script>
+</body>
+</html>
