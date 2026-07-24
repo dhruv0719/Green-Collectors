@@ -21,3 +21,11 @@ class UserResponse(BaseModel):
     email: EmailStr
     city: str | None = None
     country: str | None = None
+
+class UserCreate(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+    hashed_password: str
+    city: str | None
+    country: str | None
