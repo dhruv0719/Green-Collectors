@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: green-collectors-db
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: green_collectors
+      POSTGRES_USER: dhruvpatil
+      POSTGRES_PASSWORD: Dhruv_07
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    container_name: green-collectors-adminer
+
+    restart: unless-stopped
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - postgres
