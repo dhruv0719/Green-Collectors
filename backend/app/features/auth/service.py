@@ -9,17 +9,17 @@ async def signup(db:AsyncSession, data: schema.UserSignupRequest) -> schema.User
     if user_email is not None:
         raise ValueError("Email already exists")
 
-    password = hash_password(data.password)
-    user = schema.UserCreate(
+    hash_password = hash_password(data.password)
+    user_data = schema.UserCreate(
         first_name = data.first_name,
         last_name = data.last_name,
         email = data.email,
-        hashed_password = password,
+        hashed_password = hash_password,
         city = data.city,
         country = data.country
     )   
 
-    created_user  = await create_user(db, user)
+    created_user  = await create_user(db, user_data)
 
     user_response = schema.UserResponse(
         id = created_user.id,
