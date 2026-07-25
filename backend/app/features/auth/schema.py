@@ -1,5 +1,5 @@
 # backend/app/features/auth/schema.py
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from uuid import UUID 
 
 class UserSignupRequest(BaseModel):
@@ -21,6 +21,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     city: str | None = None
     country: str | None = None
+    model_config = ConfigDict(from_attributes=True)
 
 class UserCreate(BaseModel):
     first_name: str
