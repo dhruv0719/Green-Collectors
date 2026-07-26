@@ -24,3 +24,26 @@ from app.features.leaderboard.model import Leaderboard
 ~~~
 
 Making the env.py to an synchronous engine to asynchronous engine :)) "date: 24/07/26"
+
+
+
+----
+----
+
+Later we need to store the Refersh Token model into the redis if i want the server side. for the client side i should store them into the cookies i guess 
+
+Small things you can leave for later
+
+These are improvements, not blockers.
+
+needs_rehash() during login
+Refresh-token endpoint
+Logout endpoint
+Refresh-token storage/revocation
+Custom exception classes
+Rate limiting
+Email verification
+Password reset
+Role-based permissions
+
+:)) "date: 26/07/26"
