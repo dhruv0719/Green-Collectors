@@ -1,16 +1,8 @@
 # backend/app/main.py
 
 from fastapi import FastAPI
+from app.api.router import api_router
 
-app = FastAPI()
+app = FastAPI(title="Green Collectors API", version="1.0.0")
 
-@app.get("/")
-def read_root():
-    return {"status": "success", "message": "FastAPI is up and running!"}
-
-@app.get("/health")
-def health():
-    return {
-        "status": "healthy",
-        "version": "0.1.0"
-    }
+app.include_router(api_router)
