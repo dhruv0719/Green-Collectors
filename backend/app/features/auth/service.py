@@ -1,20 +1,20 @@
 # backend/app/features/auth/service.py
-from sqlalchemy.ext.asyncio import AsyncSession
 from app.features.auth import schema
-from app.core.security import hash_password
-from app.features.auth.repository import get_user_by_email, create_user
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.features.auth.repository import create_user, get_user_by_email
+from app.core.security import hash_password, verify_password, create_access_token, create_refresh_token
 
-async def signup(db:AsyncSession, data: schema.UserSignupRequest) -> schema.UserResponse:
+async def signup(db: AsyncSession, data: schema.UserSignupRequest) -> schema.UserResponse:
     user_email = await get_user_by_email(db, data.email)
     if user_email is not None:
         raise ValueError("Email already exists")
 
-    hash_password = hash_password(data.password)
+    hashed_password = hash_password(data.password)
     user_data = schema.UserCreate(
         first_name = data.first_name,
         last_name = data.last_name,
         email = data.email,
-        hashed_password = hash_password,
+        hashed_password = hashed_password,
         city = data.city,
         country = data.country
     )   
@@ -31,3 +31,19 @@ async def signup(db:AsyncSession, data: schema.UserSignupRequest) -> schema.User
     )
 
     return user_response
+
+async def login(db: AsyncSession, data: schema.UserLoginRequest) -> schema.TokenResponse:
+    user = await get_user_by_email(db, data.email)
+    if user is None:
+        raise ValueError("Invalid email or password")
+
+    if not verify_password(user.hashed_password, data.password):
+        raise ValueError("Invalid email or password")
+
+    access_token = create_access_token(subject=str(user.id))
+    refresh_token = create_refresh_token(subject=str(user.id))
+
+    return schema.TokenResponse(
+        access_token=access_token,
+        refresh_token=refresh_token
+    )
