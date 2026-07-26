@@ -1,4 +1,5 @@
 # backend/app/core/dependencies.py
+from uuid import UUID
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -30,7 +31,7 @@ async def get_current_user(db: Annotated[AsyncSession, Depends(get_db)], token: 
         if payload.get("type") != "access":
             raise credentials_exception
 
-        user = await get_user_by_id(db, user_id)
+        user = await get_user_by_id(db, UUID(user_id))
         if user is None:
             raise credentials_exception
 
