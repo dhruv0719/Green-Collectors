@@ -30,3 +30,11 @@ class UserCreate(BaseModel):
     hashed_password: str
     city: str | None
     country: str | None
+
+class TokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+class AuthResponse(TokenResponse):
+    user_id: UUID
