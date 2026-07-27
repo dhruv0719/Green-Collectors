@@ -1,5 +1,6 @@
 # backend/app/features/auth/service.py
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import HTTPException, status
 
 from app.features.auth import schema
 from app.features.auth.model import User
@@ -20,7 +21,10 @@ def build_auth_response(user: User) -> schema.AuthResponse:
 async def signup(db: AsyncSession, data: schema.UserSignupRequest) -> schema.AuthResponse:
     existing_user = await get_user_by_email(db, data.email)
     if existing_user is not None:
-        raise ValueError("Email already exists")
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already exists",
+        )
 
     hashed_password = hash_password(data.password)
     user_data = schema.UserCreate(
@@ -39,9 +43,15 @@ async def signup(db: AsyncSession, data: schema.UserSignupRequest) -> schema.Aut
 async def login(db: AsyncSession, data: schema.UserLoginRequest) -> schema.AuthResponse:
     user = await get_user_by_email(db, data.email)
     if user is None:
-        raise ValueError("Invalid email or password")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password",
+        )
 
     if not verify_password(user.hashed_password, data.password):
-        raise ValueError("Invalid email or password")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password",
+        )
 
     return build_auth_response(user)
