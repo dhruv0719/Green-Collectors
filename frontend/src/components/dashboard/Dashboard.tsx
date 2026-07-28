@@ -1,9 +1,10 @@
+// frontend/src/components/dashboard/Dashboard.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { clearStoredToken } from "@/src/lib/auth";
+import { clearStoredToken } from "@/src/lib/api/auth";
 import { getCurrentUser } from "@/src/lib/api";
 
 type UserProfile = {

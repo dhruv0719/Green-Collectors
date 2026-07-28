@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { signup } from "@/src/lib/api";
-import { setStoredToken } from "@/src/lib/auth";
+import { setStoredToken } from "@/src/lib/api/auth";
 
 export default function SignUpForm() {
   const router = useRouter();
