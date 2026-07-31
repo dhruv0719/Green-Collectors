@@ -10,4 +10,4 @@ def calculate_co2_saved(category: Category, activity: str, quantity: float, unit
     if expected_unit != unit:
         raise ValueError("Invalid unit for this activity")
 
-    return quantity * activity_data["factor"]
+    return round(quantity * activity_data["factor"], 2)
