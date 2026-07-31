@@ -6,6 +6,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from app.features.auth.model import User
+from app.features.green_actions.model import GreenAction
 from app.config.settings import settings
 from app.config.database import Base
 # this is the Alembic Config object, which provides
