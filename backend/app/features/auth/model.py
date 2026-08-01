@@ -8,6 +8,7 @@ from app.config.database import Base, TimeStampMixin
 
 if TYPE_CHECKING:
     from app.features.green_actions.model import GreenAction
+    from app.features.carbon_footprint.model import CarbonFootprint
 
 class User(Base, TimeStampMixin):
     __tablename__ = "users"
@@ -21,3 +22,4 @@ class User(Base, TimeStampMixin):
     country: Mapped[str | None] = mapped_column(nullable=True)
 
     green_actions: Mapped[list["GreenAction"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    carbon_footprints: Mapped[list["CarbonFootprint"]] = relationship(back_populates="user", cascade="all, delete-orphan")
