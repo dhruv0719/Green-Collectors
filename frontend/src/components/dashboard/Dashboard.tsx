@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { clearStoredToken } from "@/src/lib/api/auth";
 import { getCurrentUser } from "@/src/lib/api";
 import GreenActionLogScreen from "@/src/components/green_actions/GreenActionLogScreen";
+import CarbonFootprintLogScreen from "@/src/components/carbon_footprint/CarbonFootprintLogScreen";
 
 type UserProfile = {
   id: string;
@@ -121,7 +122,10 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <GreenActionLogScreen />
+      <div className="grid gap-6 xl:grid-cols-2">
+        <GreenActionLogScreen />
+        <CarbonFootprintLogScreen />
+      </div>
     </div>
   );
 }
