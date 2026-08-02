@@ -66,19 +66,44 @@ const ACTIVITY_OPTIONS: Record<string, Array<{ value: string; label: string }>> 
   waste: [{ value: "general_waste", label: "General waste" }],
 };
 
-const UNIT_OPTIONS: Record<string, Array<{ value: string; label: string }>> = {
-  transport: [
-    { value: "km", label: "km" },
-    { value: "count", label: "count" },
-  ],
-  home_energy: [
-    { value: "kwh", label: "kWh" },
-    { value: "kg", label: "kg" },
-  ],
-  food: [{ value: "kg", label: "kg" }],
-  flight: [{ value: "km", label: "km" }],
-  shopping: [{ value: "kg", label: "kg" }],
-  waste: [{ value: "tonne", label: "tonne" }],
+const UNIT_OPTIONS: Record<string, Record<string, Array<{ value: string; label: string }>>> = {
+  transport: {
+    petrol_car: [{ value: "km", label: "km" }],
+    diesel_car: [{ value: "km", label: "km" }],
+    electric_car: [{ value: "km", label: "km" }],
+    bus: [{ value: "km", label: "km" }],
+    train: [{ value: "km", label: "km" }],
+    metro: [{ value: "km", label: "km" }],
+    motorbike: [{ value: "km", label: "km" }],
+  },
+  home_energy: {
+    electricity: [{ value: "kwh", label: "kWh" }],
+    lpg: [{ value: "liter", label: "liter" }],
+    natural_gas: [{ value: "liter", label: "liter" }],
+  },
+  food: {
+    beef: [{ value: "kg", label: "kg" }],
+    lamb: [{ value: "kg", label: "kg" }],
+    pork: [{ value: "kg", label: "kg" }],
+    chicken: [{ value: "kg", label: "kg" }],
+    fish: [{ value: "kg", label: "kg" }],
+    vegetarian: [{ value: "kg", label: "kg" }],
+    vegan: [{ value: "kg", label: "kg" }],
+    dairy: [{ value: "kg", label: "kg" }],
+  },
+  flight: {
+    domestic: [{ value: "km", label: "km" }],
+    short_haul: [{ value: "km", label: "km" }],
+    long_haul: [{ value: "km", label: "km" }],
+  },
+  shopping: {
+    clothing: [{ value: "count", label: "count" }],
+    electronics: [{ value: "count", label: "count" }],
+    furniture: [{ value: "count", label: "count" }],
+  },
+  waste: {
+    general_waste: [{ value: "kg", label: "kg" }],
+  },
 };
 
 export default function CarbonFootprintLogScreen() {
@@ -92,16 +117,17 @@ export default function CarbonFootprintLogScreen() {
 
   useEffect(() => {
     const nextActivities = ACTIVITY_OPTIONS[category] ?? ACTIVITY_OPTIONS.transport;
-    const nextUnits = UNIT_OPTIONS[category] ?? UNIT_OPTIONS.transport;
-
     setActivity((current) => {
       return nextActivities.some((item) => item.value === current) ? current : nextActivities[0].value;
     });
+  }, [category]);
 
+  useEffect(() => {
+    const nextUnits = UNIT_OPTIONS[category]?.[activity] ?? UNIT_OPTIONS.transport.petrol_car;
     setUnit((current) => {
       return nextUnits.some((item) => item.value === current) ? current : nextUnits[0].value;
     });
-  }, [category]);
+  }, [activity, category]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -163,6 +189,10 @@ export default function CarbonFootprintLogScreen() {
             <div className="rounded-full border border-[#f07030]/30 bg-[#f07030]/10 px-3 py-1 text-[11px] font-semibold text-[#f07030]">
               {selectedCategory?.label}
             </div>
+          </div>
+
+          <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/70">
+            Unit is automatically matched to your chosen activity so the request stays compatible with the backend.
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">
@@ -233,7 +263,7 @@ export default function CarbonFootprintLogScreen() {
                 onChange={(event) => setUnit(event.target.value)}
                 className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-[#f07030] focus:ring-2 focus:ring-[#f07030]/20"
               >
-                {UNIT_OPTIONS[category]?.map((item) => (
+                {UNIT_OPTIONS[category]?.[activity]?.map((item) => (
                   <option key={item.value} value={item.value} className="bg-[#07140d] text-white">
                     {item.label}
                   </option>
