@@ -58,6 +58,3 @@ def decode_token(token: str) -> dict[str, Any]:
 
     except InvalidTokenError:
         raise ValueError("Invaild token")
-
-def hash_token(raw_token: str) -> str:
-    return hash_password(raw_token)
