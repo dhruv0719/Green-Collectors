@@ -20,26 +20,31 @@ from app.features.carbon_footprint.constants import (
     Unit as CarbonUnit,
 )
 
+# Green actions measure CO2 *saved*. For transport we use the "avoided car trip"
+# rule: any time a user cycles / walks / takes transit instead of driving, they
+# are credited the full petrol-car emission they avoided (0.192 kgCO2e/km).
+AVOIDED_PETROL_CAR_FACTOR = 0.192
+
 EMISSION_FACTORS = {
     Category.TRANSPORT: {
         TransportActivity.CYCLING: {
-            "factor": 0.17,
+            "factor": AVOIDED_PETROL_CAR_FACTOR,
             "unit": Unit.KILOMETER,
         },
         TransportActivity.WALKING: {
-            "factor": 0.17,
+            "factor": AVOIDED_PETROL_CAR_FACTOR,
             "unit": Unit.KILOMETER,
         },
         TransportActivity.BUS: {
-            "factor": 0.08,
+            "factor": AVOIDED_PETROL_CAR_FACTOR,
             "unit": Unit.KILOMETER,
         },
         TransportActivity.TRAIN: {
-            "factor": 0.03,
+            "factor": AVOIDED_PETROL_CAR_FACTOR,
             "unit": Unit.KILOMETER,
         },
         TransportActivity.METRO: {
-            "factor": 0.04,
+            "factor": AVOIDED_PETROL_CAR_FACTOR,
             "unit": Unit.KILOMETER,
         },
     },
