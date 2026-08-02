@@ -21,6 +21,10 @@ async def signup(payload: schema.UserSignupRequest, db: DBSession):
 async def login(payload: schema.UserLoginRequest, db: DBSession):
     return await service.login(db=db, data=payload)
 
+@router.post("/refresh", response_model=schema.AuthResponse)
+async def refresh(payload: schema.RefreshRequest, db: DBSession):
+    return await service.refresh_access_token(db=db, data=payload)
+
 @router.get("/me", response_model=schema.UserResponse)
 async def me(current_user: CurrentUser):
     return current_user
