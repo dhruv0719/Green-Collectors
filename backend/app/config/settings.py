@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
+    # SQL logging in dev only; keep quiet in production.
+    DB_ECHO: bool = False
+
     model_config = SettingsConfigDict(
         env_file=".env",
         extra="ignore"
