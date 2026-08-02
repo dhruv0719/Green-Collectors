@@ -38,3 +38,6 @@ class TokenResponse(BaseModel):
 
 class AuthResponse(TokenResponse):
     user_id: UUID
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
