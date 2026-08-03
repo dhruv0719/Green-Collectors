@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { logGreenAction } from "@/src/lib/api/green_actions";
 import type { GreenActionCreate, GreenActionResponse } from "@/src/types/green_action";
@@ -59,7 +59,7 @@ const UNIT_OPTIONS: Record<string, Array<{ value: string; label: string }>> = {
   nature: [{ value: "count", label: "count" }],
 };
 
-export default function GreenActionLogScreen() {
+export default function GreenActionLogScreen({ onLogged }: { onLogged?: () => void }) {
   const [category, setCategory] = useState("transport");
   const [activity, setActivity] = useState("cycling");
   const [quantity, setQuantity] = useState("5");
@@ -69,22 +69,27 @@ export default function GreenActionLogScreen() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState<GreenActionResponse | null>(null);
 
-  useEffect(() => {
-    const nextActivities = ACTIVITY_OPTIONS[category] ?? ACTIVITY_OPTIONS.transport;
-    const nextUnits = UNIT_OPTIONS[category] ?? UNIT_OPTIONS.transport;
+  const availableActivities = useMemo(
+    () => ACTIVITY_OPTIONS[category] ?? ACTIVITY_OPTIONS.transport,
+    [category]
+  );
 
-    setActivity((current) => {
-      return nextActivities.some((item) => item.value === current)
-        ? current
-        : nextActivities[0].value;
-    });
+  const availableUnits = useMemo(
+    () => UNIT_OPTIONS[category] ?? UNIT_OPTIONS.transport,
+    [category]
+  );
 
-    setUnit((current) => {
-      return nextUnits.some((item) => item.value === current)
-        ? current
-        : nextUnits[0].value;
-    });
-  }, [category]);
+  const resolvedActivity = useMemo(() => {
+    return availableActivities.some((item) => item.value === activity)
+      ? activity
+      : availableActivities[0]?.value ?? "cycling";
+  }, [activity, availableActivities]);
+
+  const resolvedUnit = useMemo(() => {
+    return availableUnits.some((item) => item.value === unit)
+      ? unit
+      : availableUnits[0]?.value ?? "km";
+  }, [unit, availableUnits]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -92,6 +97,7 @@ export default function GreenActionLogScreen() {
     try {
       setLoading(true);
       setError("");
+      setSuccess(null);
 
       const payload: GreenActionCreate = {
         category,
@@ -105,6 +111,7 @@ export default function GreenActionLogScreen() {
       setSuccess(data);
       setLocation("");
       setQuantity("1");
+      onLogged?.();
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -181,7 +188,7 @@ export default function GreenActionLogScreen() {
               Activity
             </label>
             <select
-              value={activity}
+              value={resolvedActivity}
               onChange={(event) => setActivity(event.target.value)}
               className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-[#6fcf45] focus:ring-2 focus:ring-[#6fcf45]/20"
             >
@@ -214,11 +221,11 @@ export default function GreenActionLogScreen() {
                 Unit
               </label>
               <select
-                value={unit}
+                value={resolvedUnit}
                 onChange={(event) => setUnit(event.target.value)}
                 className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-[#6fcf45] focus:ring-2 focus:ring-[#6fcf45]/20"
               >
-                {UNIT_OPTIONS[category]?.map((item) => (
+                {availableUnits.map((item) => (
                   <option key={item.value} value={item.value} className="bg-[#07140d] text-white">
                     {item.label}
                   </option>
