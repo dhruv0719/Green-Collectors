@@ -1,92 +1,61 @@
 // frontend/src/lib/api.ts
-import { clearStoredToken, getStoredToken } from "./api/auth";
-import type  { AuthResponse } from "../types/auth";
-import type  { User } from "../types/user";
+// Auth API surface (login / signup / refresh / me), backed by the shared client.
 
-const API_BASE_URL = "http://127.0.0.1:8000/api/v1";
+import { apiRequest } from "./api/client";
+import { setTokens } from "./api/auth";
+import type { AuthResponse } from "../types/auth";
+import type { User } from "../types/user";
 
-async function parseApiResponse(response: Response) {
-  const contentType = response.headers.get("content-type") || "";
-
-  if (contentType.includes("application/json")) {
-    return response.json();
-  }
-
-  return response.text();
+/** Normalize empty strings to null so the backend stores real NULLs. */
+function toNullable(value: string): string | null {
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
 }
 
 export async function login(email: string, password: string): Promise<AuthResponse> {
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+  const data = await apiRequest<AuthResponse>("/auth/login", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
+    auth: false,
+    body: JSON.stringify({ email, password }),
   });
-
-  const data = await parseApiResponse(response);
-
-  if (!response.ok) {
-    throw new Error(data?.detail ?? "Invalid email or password");
-  }
-
+  setTokens(data.access_token, data.refresh_token);
   return data;
 }
 
-export async function signup(
-  firstName: string,
-  lastName: string,
-  email: string,
-  password: string,
-  city: string,
-  country: string
-): Promise<AuthResponse> {
-  const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+export async function signup(params: {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  city?: string;
+  country?: string;
+}): Promise<AuthResponse> {
+  const data = await apiRequest<AuthResponse>("/auth/signup", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    auth: false,
     body: JSON.stringify({
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      password,
-      city,
-      country,
+      first_name: params.first_name,
+      last_name: params.last_name,
+      email: params.email,
+      password: params.password,
+      city: toNullable(params.city ?? ""),
+      country: toNullable(params.country ?? ""),
     }),
   });
+  setTokens(data.access_token, data.refresh_token);
+  return data;
+}
 
-  const data = await parseApiResponse(response);
-
-  if (!response.ok) {
-    throw new Error(data?.detail ?? "Signup failed");
-  }
-
+export async function refresh(refreshToken: string): Promise<AuthResponse> {
+  const data = await apiRequest<AuthResponse>("/auth/refresh", {
+    method: "POST",
+    auth: false,
+    body: JSON.stringify({ refresh_token: refreshToken }),
+  });
+  setTokens(data.access_token, data.refresh_token);
   return data;
 }
 
 export async function getCurrentUser(): Promise<User> {
-  const token = getStoredToken();
-
-  if (!token) {
-    throw new Error("Unauthorized");
-  }
-
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data = await parseApiResponse(response);
-
-  if (!response.ok) {
-    clearStoredToken();
-    throw new Error(data?.detail ?? "Unauthorized");
-  }
-
-  return data;
+  return apiRequest<User>("/auth/me");
 }
