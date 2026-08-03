@@ -2,10 +2,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { signup } from "@/src/lib/api";
-import { setStoredToken } from "@/src/lib/api/auth";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -27,18 +27,14 @@ export default function SignUpForm() {
       setLoading(true);
       setError("");
 
-      const data = await signup(
-        firstName,
-        lastName,
+      await signup({
+        first_name: firstName,
+        last_name: lastName,
         email,
         password,
         city,
-        country
-      );
-
-      console.log(data);
-
-      setStoredToken(data.access_token);
+        country,
+      });
 
       router.push("/dashboard");
     } catch (err) {
@@ -174,9 +170,9 @@ export default function SignUpForm() {
 
         <div className="mt-5 text-center text-sm text-white/45">
           Already have an account?{' '}
-          <a href="/login" className="font-semibold text-[#6fcf45] hover:underline">
+          <Link href="/login" className="font-semibold text-[#6fcf45] hover:underline">
             Sign in
-          </a>
+          </Link>
         </div>
       </div>
     </form>
