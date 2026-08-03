@@ -1,43 +1,31 @@
-import { getStoredToken } from "../api/auth";
+// frontend/src/lib/api/carbon_footprint.ts
 
-const API_BASE_URL = "http://127.0.0.1:8000/api/v1";
+import { apiRequest } from "./client";
+import type {
+  CarbonFootprintCreate,
+  CarbonFootprintResponse,
+  CarbonFootprintStats,
+} from "@/src/types/carbon_footprint";
 
-async function parseApiResponse(response: Response) {
-  const contentType = response.headers.get("content-type") || "";
-
-  if (contentType.includes("application/json")) {
-    return response.json();
-  }
-
-  return response.text();
-}
-
-export async function logCarbonFootprint(payload: {
-  category: string;
-  activity: string;
-  quantity: number;
-  unit: string;
-}) {
-  const token = getStoredToken();
-
-  if (!token) {
-    throw new Error("Please sign in first.");
-  }
-
-  const response = await fetch(`${API_BASE_URL}/carbon-footprint/`, {
+export async function logCarbonFootprint(
+  payload: CarbonFootprintCreate
+): Promise<CarbonFootprintResponse> {
+  return apiRequest<CarbonFootprintResponse>("/carbon-footprint/", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
     body: JSON.stringify(payload),
   });
+}
 
-  const data = await parseApiResponse(response);
+export async function listCarbonFootprints(
+  params: { limit?: number; offset?: number } = {}
+): Promise<CarbonFootprintResponse[]> {
+  const query = new URLSearchParams();
+  if (params.limit) query.set("limit", String(params.limit));
+  if (params.offset) query.set("offset", String(params.offset));
+  const qs = query.toString();
+  return apiRequest<CarbonFootprintResponse[]>(`/carbon-footprint/${qs ? `?${qs}` : ""}`);
+}
 
-  if (!response.ok) {
-    throw new Error(data?.detail ?? "Unable to save your carbon footprint.");
-  }
-
-  return data;
+export async function getCarbonFootprintStats(): Promise<CarbonFootprintStats> {
+  return apiRequest<CarbonFootprintStats>("/carbon-footprint/stats");
 }
