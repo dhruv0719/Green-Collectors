@@ -1,23 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { logCarbonFootprint } from "@/src/lib/api/carbon_footprint";
-
-type CarbonFootprintPayload = {
-  category: string;
-  activity: string;
-  quantity: number;
-  unit: string;
-};
-
-type CarbonFootprintResponse = {
-  category: string;
-  activity: string;
-  quantity: number;
-  unit: string;
-  co2_emitted: number;
-};
+import type { CarbonFootprintCreate, CarbonFootprintResponse } from "@/src/types/carbon_footprint";
 
 const CATEGORY_OPTIONS = [
   { value: "transport", label: "Transport", icon: "🚗", description: "Cars, buses, trains and rides" },
@@ -106,7 +92,7 @@ const UNIT_OPTIONS: Record<string, Record<string, Array<{ value: string; label: 
   },
 };
 
-export default function CarbonFootprintLogScreen() {
+export default function CarbonFootprintLogScreen({ onLogged }: { onLogged?: () => void }) {
   const [category, setCategory] = useState("transport");
   const [activity, setActivity] = useState("petrol_car");
   const [quantity, setQuantity] = useState("10");
@@ -115,19 +101,27 @@ export default function CarbonFootprintLogScreen() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState<CarbonFootprintResponse | null>(null);
 
-  useEffect(() => {
-    const nextActivities = ACTIVITY_OPTIONS[category] ?? ACTIVITY_OPTIONS.transport;
-    setActivity((current) => {
-      return nextActivities.some((item) => item.value === current) ? current : nextActivities[0].value;
-    });
-  }, [category]);
+  const availableActivities = useMemo(
+    () => ACTIVITY_OPTIONS[category] ?? ACTIVITY_OPTIONS.transport,
+    [category]
+  );
 
-  useEffect(() => {
-    const nextUnits = UNIT_OPTIONS[category]?.[activity] ?? UNIT_OPTIONS.transport.petrol_car;
-    setUnit((current) => {
-      return nextUnits.some((item) => item.value === current) ? current : nextUnits[0].value;
-    });
-  }, [activity, category]);
+  const availableUnits = useMemo(
+    () => UNIT_OPTIONS[category]?.[activity] ?? UNIT_OPTIONS.transport.petrol_car,
+    [activity, category]
+  );
+
+  const resolvedActivity = useMemo(() => {
+    return availableActivities.some((item) => item.value === activity)
+      ? activity
+      : availableActivities[0]?.value ?? "petrol_car";
+  }, [activity, availableActivities]);
+
+  const resolvedUnit = useMemo(() => {
+    return availableUnits.some((item) => item.value === unit)
+      ? unit
+      : availableUnits[0]?.value ?? "km";
+  }, [unit, availableUnits]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -135,8 +129,9 @@ export default function CarbonFootprintLogScreen() {
     try {
       setLoading(true);
       setError("");
+      setSuccess(null);
 
-      const payload: CarbonFootprintPayload = {
+      const payload: CarbonFootprintCreate = {
         category,
         activity,
         quantity: Number(quantity),
@@ -146,6 +141,7 @@ export default function CarbonFootprintLogScreen() {
       const data = await logCarbonFootprint(payload);
       setSuccess(data);
       setQuantity("1");
+      onLogged?.();
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -226,11 +222,11 @@ export default function CarbonFootprintLogScreen() {
               Activity
             </label>
             <select
-              value={activity}
+              value={resolvedActivity}
               onChange={(event) => setActivity(event.target.value)}
               className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-[#f07030] focus:ring-2 focus:ring-[#f07030]/20"
             >
-              {ACTIVITY_OPTIONS[category]?.map((item) => (
+              {availableActivities.map((item) => (
                 <option key={item.value} value={item.value} className="bg-[#07140d] text-white">
                   {item.label}
                 </option>
@@ -259,11 +255,11 @@ export default function CarbonFootprintLogScreen() {
                 Unit
               </label>
               <select
-                value={unit}
+                value={resolvedUnit}
                 onChange={(event) => setUnit(event.target.value)}
                 className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-[#f07030] focus:ring-2 focus:ring-[#f07030]/20"
               >
-                {UNIT_OPTIONS[category]?.[activity]?.map((item) => (
+                {availableUnits.map((item) => (
                   <option key={item.value} value={item.value} className="bg-[#07140d] text-white">
                     {item.label}
                   </option>
