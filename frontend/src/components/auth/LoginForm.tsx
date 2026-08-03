@@ -2,10 +2,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { login } from "@/src/lib/api";
-import { setStoredToken } from "@/src/lib/api/auth";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -22,8 +22,8 @@ export default function LoginForm() {
       setLoading(true);
       setError("");
 
-      const data = await login(email, password);
-      setStoredToken(data.access_token);
+      await login(email, password);
+      // login() already persists both tokens; just navigate.
       router.push("/dashboard");
     } catch (err) {
       if (err instanceof Error) {
@@ -101,9 +101,9 @@ export default function LoginForm() {
 
         <div className="mt-5 text-center text-sm text-white/45">
           New here?{' '}
-          <a href="/signup" className="font-semibold text-[#6fcf45] hover:underline">
+          <Link href="/signup" className="font-semibold text-[#6fcf45] hover:underline">
             Create an account
-          </a>
+          </Link>
         </div>
       </div>
     </div>
