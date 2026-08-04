@@ -133,9 +133,9 @@ export default function CarbonFootprintLogScreen({ onLogged }: { onLogged?: () =
 
       const payload: CarbonFootprintCreate = {
         category,
-        activity,
+        activity: resolvedActivity,
         quantity: Number(quantity),
-        unit,
+        unit: resolvedUnit,
       };
 
       const data = await logCarbonFootprint(payload);
