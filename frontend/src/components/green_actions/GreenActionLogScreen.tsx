@@ -101,9 +101,9 @@ export default function GreenActionLogScreen({ onLogged }: { onLogged?: () => vo
 
       const payload: GreenActionCreate = {
         category,
-        activity,
+        activity: resolvedActivity,
         quantity: Number(quantity),
-        unit,
+        unit: resolvedUnit,
         location,
       };
 
