@@ -1,10 +1,7 @@
-"use client";
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AppShell from "@/src/components/navigation/AppShell";
-import { usePathname } from "next/navigation";
+import AuthLayout from "@/src/components/layout/AuthLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,13 +21,10 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const pathname = usePathname();
-  const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/signup");
-
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        {isAuthPage ? children : <AppShell>{children}</AppShell>}
+        <AuthLayout>{children}</AuthLayout>
       </body>
     </html>
   );
