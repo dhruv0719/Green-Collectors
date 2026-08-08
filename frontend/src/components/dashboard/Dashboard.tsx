@@ -72,6 +72,11 @@ function StatCard({
 }
 
 function formatRelative(iso: string): string {
+  // Avoid hydration mismatches by not using Date.now on the server.
+  if (typeof window === "undefined") {
+    // Server-side render: return an empty placeholder.
+    return "";
+  }
   const then = new Date(iso).getTime();
   const diff = Date.now() - then;
   const mins = Math.round(diff / 60000);
